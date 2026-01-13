@@ -1,0 +1,172 @@
+name: Build OFP D3DX Wrapper
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - '**.cpp'
+      - '**.hpp'
+      - '**.h'
+      - 'CMakeLists.txt'
+      - '.github/workflows/**'
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Build debug version'
+        required: false
+        default: 'false'
+      configuration:
+        description: 'Build configuration (Debug/Release)'
+        required: false
+        default: 'Release'
+
+jobs:
+  build:
+    name: Build ${{ inputs.configuration || 'Release' }} (x86)
+    runs-on: windows-latest
+    
+    defaults:
+      run:
+        shell: cmd
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        
+    - name: Setup Visual Studio
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Install dependencies
+      run: |
+        choco install -y vcredist140
+        choco install -y directx-sdk
+        
+    - name: Create build directory
+      run: mkdir build
+      
+    - name: Configure with CMake
+      working-directory: build
+      run: |
+        cmake .. -G "Visual Studio 17 2022" -A Win32 -DCMAKE_BUILD_TYPE=${{ inputs.configuration || 'Release' }} -DCMAKE_INSTALL_PREFIX=./install
+        
+    - name: Build
+      working-directory: build
+      run: |
+        cmake --build . --config ${{ inputs.configuration || 'Release' }} --parallel
+        
+    - name: Copy output files
+      working-directory: build
+      run: |
+        mkdir %GITHUB_WORKSPACE%\output
+        copy /Y ${{ inputs.configuration || 'Release' }}\*.dll %GITHUB_WORKSPACE%\output\
+        copy /Y ${{ inputs.configuration || 'Release' }}\*.pdb %GITHUB_WORKSPACE%\output\ 2>nul || echo "No PDB files"
+        copy /Y *.ini %GITHUB_WORKSPACE%\output\ 2>nul || echo "No INI files"
+        
+    - name: Create artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ofp-d3dx-wrapper-${{ inputs.configuration || 'Release' }}-x86
+        path: output/
+        retention-days: 7
+        
+    - name: Upload debug build (if requested)
+      if: inputs.debug == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ofp-d3dx-wrapper-debug-x86
+        path: build/Debug/
+        retention-days: 7
+        
+    - name: Summary
+      run: |
+        echo.
+        echo ============================================
+        echo Build Summary
+        echo ============================================
+        echo Configuration: ${{ inputs.configuration || 'Release' }}
+        echo Platform: Win32 (x86)
+        echo.
+        echo Output files:
+        dir %GITHUB_WORKSPACE%\output
+        echo.
+        echo Artifacts uploaded successfully!
+        echo ============================================
+        
+  test-compile:
+    name: Test Compilation
+    runs-on: windows-latest
+    needs: build
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ofp-d3dx-wrapper-${{ inputs.configuration || 'Release' }}-x86
+        path: test
+        
+    - name: Verify files exist
+      run: |
+        echo.
+        echo Testing files:
+        dir test
+        if exist test\d3d8.dll (
+          echo [OK] d3d8.dll found
+        ) else (
+          echo [ERROR] d3d8.dll not found!
+          exit 1
+        )
+        if exist test\d3dx.dll (
+          echo [OK] d3dx.dll found
+        ) else (
+          echo [ERROR] d3dx.dll not found!
+          exit 1
+        )
+        echo.
+        echo All required files present!
+        echo ============================================
+        
+  create-release:
+    name: Create Release (on tag)
+    runs-on: ubuntu-latest
+    needs: [build, test-compile]
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ofp-d3dx-wrapper-Release-x86
+        path: release
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/**
+        generate_release_notes: true
+        name: OFP D3DX Wrapper ${{ github.ref_name }}
+        body: |
+          ## OFP D3DX Wrapper - Release ${{ github.ref_name }}
+          
+          ### What's New
+          - D3D8 to D3D9 conversion for Operation Flashpoint
+          - Enhanced graphics with anisotropic filtering (16x)
+          - Night filter removal
+          - MOD support (MOD_GB, etc.)
+          
+          ### Files
+          - `d3d8.dll` - Core D3D8 to D3D9 converter
+          - `d3dx.dll` - Enhanced graphics wrapper
+          - `d3dx.ini` - Configuration file
+          
+          ### Installation
+          1. Copy all files to your OFP game directory
+          2. Edit `d3dx.ini` to configure settings
+          3. Launch with `FLASHPOINT1.96.EXE -mod=@MOD_GB`
+          
+          ### For more info, visit the [GitHub repository](https://github.com/${{ github.repository }})
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
