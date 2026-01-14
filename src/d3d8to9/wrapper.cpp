@@ -1,6 +1,5 @@
 #include "config.hpp"
 #include <d3d9.h>
-#include <d3dx9.h>
 #include <initguid.h>
 #include <stdio.h>
 #include <time.h>
@@ -195,11 +194,6 @@ public:
     STDMETHOD(CreateTextureFromFile)(THIS_ LPCSTR pSrcFile, IDirect3DTexture9** ppTexture) override
     {
         return m_pDevice9->CreateTextureFromFile(pSrcFile, ppTexture);
-    }
-
-    STDMETHOD(CreateTextureFromFileEx)(THIS_ LPCSTR pSrcFile, UINT Width, UINT Height, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, DWORD Filter, DWORD MipFilter, D3DCOLOR ColorKey, D3DXIMAGE_INFO* pSrcInfo, PALETTEENTRY* pPalette, IDirect3DTexture9** ppTexture) override
-    {
-        return m_pDevice9->CreateTextureFromFileEx(pSrcFile, Width, Height, Levels, Usage, Format, Pool, Filter, MipFilter, ColorKey, pSrcInfo, pPalette, ppTexture);
     }
 
     STDMETHOD(CreateVertexBuffer)(THIS_ UINT Length, DWORD Usage, DWORD FVF, D3DPOOL Pool, IDirect3DVertexBuffer9** ppVertexBuffer, HANDLE* pSharedHandle) override
