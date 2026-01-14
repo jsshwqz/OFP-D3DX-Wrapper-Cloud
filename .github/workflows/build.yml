@@ -17,7 +17,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Clean build directory
-      run: rm -rf build
+      run: Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
 
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Release
