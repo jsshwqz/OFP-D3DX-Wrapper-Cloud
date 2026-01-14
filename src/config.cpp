@@ -34,6 +34,13 @@ namespace Config
         
         g_Config.AutoFallback = GetPrivateProfileIntA("Performance", "AutoFallback", 1, configPath) ? TRUE : FALSE;
         g_Config.MinPerformanceMode = GetPrivateProfileIntA("Performance", "MinPerformanceMode", 0, configPath) ? TRUE : FALSE;
+
+        g_Config.FPSUpdateInterval = GetPrivateProfileIntA("FPS", "FPSUpdateInterval", 1, configPath);
+
+        g_Config.DefaultFOV = GetPrivateProfileIntA("FOV", "DefaultFOV", 90, configPath);
+        g_Config.AllowDynamicFOV = GetPrivateProfileIntA("FOV", "AllowDynamicFOV", 0, configPath) ? TRUE : FALSE;
+        g_Config.FOVToggleKey = GetPrivateProfileIntA("FOV", "FOVToggleKey", 45, configPath);
+        g_Config.AimingFOVMultiplier = (float)GetPrivateProfileIntA("FOV", "AimingFOVMultiplier", 60, configPath) / 100.0f;
     }
 
     void Log(const char* format, ...)

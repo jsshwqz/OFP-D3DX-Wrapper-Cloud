@@ -23,6 +23,13 @@ struct WrapperConfig
     
     BOOL AutoFallback;
     BOOL MinPerformanceMode;
+
+    DWORD FPSUpdateInterval;
+
+    DWORD DefaultFOV;
+    BOOL AllowDynamicFOV;
+    DWORD FOVToggleKey;
+    float AimingFOVMultiplier;
 };
 
 namespace Config
