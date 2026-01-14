@@ -91,6 +91,11 @@ public:
         return m_pDevice9->EvictManagedTextures();
     }
 
+    STDMETHOD(EvictManagedResources)(THIS) override
+    {
+        return m_pDevice9->EvictManagedResources();
+    }
+
     STDMETHOD(GetDirect3D)(THIS_ IDirect3D9** ppD3D9) override
     {
         return m_pDevice9->GetDirect3D(ppD3D9);
@@ -101,9 +106,9 @@ public:
         return m_pDevice9->GetDeviceCaps(pCaps);
     }
 
-    STDMETHOD(GetDisplayMode)(THIS_ D3DDISPLAYMODE* pMode) override
+    STDMETHOD(GetDisplayMode)(THIS_ UINT Adapter, D3DDISPLAYMODE* pMode) override
     {
-        return m_pDevice9->GetDisplayMode(pMode);
+        return m_pDevice9->GetDisplayMode(Adapter, pMode);
     }
 
     STDMETHOD(GetCreationParameters)(THIS_ D3DDEVICE_CREATION_PARAMETERS* pParameters) override
