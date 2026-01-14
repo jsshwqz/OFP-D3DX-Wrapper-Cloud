@@ -15,11 +15,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/MinHook
 )
 
-file(GLOB SOURCES
-    "src/*.cpp"
-    "src/**/*.cpp"
-    "src/MinHook/*.c"
-)
+file(GLOB SOURCES "src/*.cpp")
 
 add_library(OFPD3DXWrapper SHARED ${SOURCES})
 

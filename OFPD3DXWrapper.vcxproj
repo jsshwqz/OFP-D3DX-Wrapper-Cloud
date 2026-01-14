@@ -71,22 +71,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\d3d8to9\d3d8to9.cpp" />
-    <ClCompile Include="src\d3d8to9\wrapper.cpp" />
-    <ClCompile Include="src\d3d8to9\hooks.cpp" />
-    <ClCompile Include="src\config.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MinHook\buffer.c" />
-    <ClCompile Include="src\MinHook\hook.c" />
-    <ClCompile Include="src\MinHook\trampoline.c" />
-    <ClCompile Include="src\MinHook\hde\hde32.c" />
-    <ClCompile Include="src\MinHook\hde\hde64.c" />
+    <ClCompile Include="src\d3d8.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\config.hpp" />
-    <ClInclude Include="include\d3d8to9.hpp" />
-    <ClInclude Include="include\hooks.hpp" />
-    <ClInclude Include="include\MinHook\MinHook.h" />
+    <ClInclude Include="d3dx.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets"></ImportGroup>
