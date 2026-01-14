@@ -23,7 +23,6 @@ add_library(OFPD3DXWrapper SHARED ${SOURCES})
 
 target_link_libraries(OFPD3DXWrapper PRIVATE
     d3d9.lib
-    dxerr.lib
 )
 
 if(MSVC)
