@@ -3,16 +3,30 @@
 #include <stdio.h>
 #include <string.h>
 #include <d3d9.h>
-#include <dxguid.h>
+#include <initguid.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 DEFINE_GUID(IID_IDirect3D8, 0x1DD9E8DA, 0x6C27, 0x41C8, 0xA7, 0xE7, 0x76, 0x15, 0xEE, 0xF7, 0x5C, 0x55);
 DEFINE_GUID(IID_IDirect3DDevice8, 0x1B026D48, 0x1159, 0x4E94, 0xA1, 0xB9, 0xD8, 0x9F, 0xE7, 0x7A, 0xE9, 0x50);
 
+#ifdef __cplusplus
+}
+#endif
+
 namespace D3D8To9
 {
-    static IDirect3D9* g_pD3D9 = nullptr;
-    static UINT g_SDKVersion = 0;
-    static LONG g_RefCount = 0;
+    extern IDirect3D9* g_pD3D9;
+    extern HMODULE g_hOriginalD3D9;
+    extern BOOL g_bFallbackMode;
+    extern void Init();
+    extern void Shutdown();
+    extern BOOL IsActive();
+    extern void SetFallbackMode(BOOL enabled);
+    extern IDirect3D9* GetD3D9();
+}
 
     typedef struct _D3DCAPS8
     {
