@@ -21,7 +21,16 @@ jobs:
 
     - name: Build
       working-directory: ${{github.workspace}}
-      run: msbuild OFPD3DXWrapper.vcxproj /p:Configuration=Release /p:Platform=Win32
+      run: |
+        msbuild OFPD3DXWrapper.vcxproj /p:Configuration=Release /p:Platform=Win32 /fileLogger /flp:logfile=build.log;verbosity=detailed 2>&1 | tee build_output.txt
+        if ($LASTEXITCODE -ne 0) { Get-Content build.log }
+
+    - name: Upload build log
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-log
+        path: build.log
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
