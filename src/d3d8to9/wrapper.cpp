@@ -2,6 +2,11 @@
 #include "d3d8to9-wrapper.hpp"
 #include <stdio.h>
 #include <string.h>
+#include <d3d9.h>
+#include <dxguid.h>
+
+DEFINE_GUID(IID_IDirect3D8, 0x1DD9E8DA, 0x6C27, 0x41C8, 0xA7, 0xE7, 0x76, 0x15, 0xEE, 0xF7, 0x5C, 0x55);
+DEFINE_GUID(IID_IDirect3DDevice8, 0x1B026D48, 0x1159, 0x4E94, 0xA1, 0xB9, 0xD8, 0x9F, 0xE7, 0x7A, 0xE9, 0x50);
 
 namespace D3D8To9
 {
@@ -120,7 +125,15 @@ namespace D3D8To9
 
         STDMETHOD_(UINT, GetAdapterModeCount)(THIS_ UINT Adapter)
         {
-            return m_pD3D9->GetAdapterModeCount(Adapter);
+            UINT count = 0;
+            for (UINT i = 0; i < 100; i++)
+            {
+                D3DDISPLAYMODE mode;
+                if (FAILED(m_pD3D9->EnumAdapterModes(Adapter, i, &mode)))
+                    break;
+                count++;
+            }
+            return count;
         }
 
         STDMETHOD(EnumAdapterModes)(THIS_ UINT Adapter, UINT Mode, D3DDISPLAYMODE* pMode)
@@ -143,9 +156,9 @@ namespace D3D8To9
             return m_pD3D9->CheckDeviceFormat(Adapter, DeviceType, AdapterFormat, Usage, RType, CheckFormat);
         }
 
-        STDMETHOD(CheckDeviceMultiSampleType)(THIS_ UINT Adapter, D3DDEVTYPE DeviceType, D3DFORMAT SurfaceFormat, BOOL Windowed, D3DMULTISAMPLE_TYPE MultiSampleType)
+        STDMETHOD(CheckDeviceMultiSampleType)(THIS_ UINT Adapter, D3DDEVTYPE DeviceType, D3DFORMAT SurfaceFormat, BOOL Windowed, D3DMULTISAMPLE_TYPE MultiSampleType, DWORD* pQuality)
         {
-            return m_pD3D9->CheckDeviceMultiSampleType(Adapter, DeviceType, SurfaceFormat, Windowed, MultiSampleType);
+            return m_pD3D9->CheckDeviceMultiSampleType(Adapter, DeviceType, SurfaceFormat, Windowed, MultiSampleType, pQuality);
         }
 
         STDMETHOD(CheckDepthStencilMatch)(THIS_ UINT Adapter, D3DDEVTYPE DeviceType, D3DFORMAT AdapterFormat, D3DFORMAT RenderTargetFormat, D3DFORMAT DepthStencilFormat)
