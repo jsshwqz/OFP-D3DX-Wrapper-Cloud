@@ -16,12 +16,6 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install DirectX SDK
-      run: |
-        Invoke-WebRequest -Uri "https://download.microsoft.com/download/A/E/7/AE743F1F-01DC-4E63-B862-894C11058522/DXSDK_Jun10.exe" -OutFile "DXSDK_Jun10.exe"
-        Start-Process -FilePath "DXSDK_Jun10.exe" -ArgumentList "/S", "/Q" -Wait
-        Remove-Item "DXSDK_Jun10.exe"
-
     - name: Clean build directory
       run: Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
 

@@ -1,10 +1,8 @@
 #include <Windows.h>
 #include <d3d9.h>
-#include <d3dx9.h>
 #include <stdio.h>
 
 #pragma comment(lib, "d3d9.lib")
-#pragma comment(lib, "d3dx9.lib")
 
 struct Config
 {
@@ -28,7 +26,6 @@ static DWORD g_CurrentFPS = 0;
 static BOOL g_FOVToggleState = TRUE;
 static DWORD g_LastKeyCheck = 0;
 static BOOL g_LastKeyState = FALSE;
-static ID3DXFont* g_pFont = nullptr;
 
 void LoadConfig()
 {
@@ -531,16 +528,6 @@ public:
         }
     }
 
-    virtual void DrawFPS()
-    {
-        if (!g_Config.ShowFPS || !g_pFont) return;
-
-        RECT rect = { (LONG)g_Config.FPSPosX, (LONG)g_Config.FPSPosY, 200, 50 };
-        char text[32];
-        snprintf(text, sizeof(text), "FPS: %u", g_CurrentFPS);
-        g_pFont->DrawTextA(NULL, text, -1, &rect, DT_LEFT | DT_TOP, D3DCOLOR_XRGB(0, 255, 0));
-    }
-
     virtual void CheckFOVKey()
     {
         if (!g_Config.EnableFOV || g_Config.FOVToggleKey == 0) return;
@@ -567,34 +554,6 @@ public:
                 m_pDevice->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
                 m_pDevice->SetSamplerState(i, D3DSAMP_MAXANISOTROPY, g_Config.AnisotropicFiltering);
             }
-        }
-    }
-
-    virtual void InitFont()
-    {
-        if (g_pFont) return;
-
-        D3DXFONT_DESCA desc = {};
-        desc.Height = 24;
-        desc.Width = 12;
-        desc.Weight = FW_NORMAL;
-        desc.MipLevels = 1;
-        desc.Italic = FALSE;
-        desc.CharSet = DEFAULT_CHARSET;
-        desc.OutputPrecision = OUT_DEFAULT_PRECIS;
-        desc.Quality = DEFAULT_QUALITY;
-        desc.PitchAndFamily = DEFAULT_PITCH | FF_DONTCARE;
-        strcpy_s(desc.FaceName, "Arial");
-
-        D3DXCreateFontIndirectA(m_pDevice, &desc, &g_pFont);
-    }
-
-    virtual void ReleaseFont()
-    {
-        if (g_pFont)
-        {
-            g_pFont->Release();
-            g_pFont = nullptr;
         }
     }
 
@@ -871,7 +830,6 @@ public:
     virtual HRESULT STDMETHODCALLTYPE EndScene(void)
     {
         UpdateFPS();
-        DrawFPS();
         return m_pDevice->EndScene();
     }
 
@@ -1020,7 +978,6 @@ public:
         {
             CDirect3DDevice8Impl* pDevice = new CDirect3DDevice8Impl(pDevice9);
             pDevice9->Release();
-            pDevice->InitFont();
             pDevice->ApplyAnisotropic();
             *ppOut = pDevice;
         }
