@@ -19,18 +19,9 @@ jobs:
     - name: Clean build directory
       run: Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
 
-    - name: Configure CMake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
-
     - name: Build
-      working-directory: ${{github.workspace}}/build
-      run: cmake --build . --config Release --verbose || echo "Build failed, checking logs..."
-
-    - name: Show build errors
-      if: failure()
-      run: |
-        Get-ChildItem -Path build -Filter *.log -Recurse | ForEach-Object { Get-Content $_.FullName }
-        Get-ChildItem -Path build -Filter *.err -Recurse | ForEach-Object { Get-Content $_.FullName }
+      working-directory: ${{github.workspace}}
+      run: msbuild OFPD3DXWrapper.vcxproj /p:Configuration=Release /p:Platform=Win32
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
