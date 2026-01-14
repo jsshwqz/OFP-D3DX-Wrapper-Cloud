@@ -57,7 +57,7 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID lpReserved)
             if (D3D8::g_hOriginalD3D8)
             {
                 D3D8::Original_Direct3DCreate8 = 
-                    (D3D8::Direct3DCreate8_t)GetProcAddress(D3D8::g_hOriginalD3D8, "Direct3DCreate8");
+                    (Direct3DCreate8_t)GetProcAddress(D3D8::g_hOriginalD3D8, "Direct3DCreate8");
                 
                 if (D3D8::Original_Direct3DCreate8)
                 {
