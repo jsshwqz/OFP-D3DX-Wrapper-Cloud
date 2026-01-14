@@ -25,11 +25,16 @@ struct WrapperConfig
     BOOL MinPerformanceMode;
 
     DWORD FPSUpdateInterval;
-
+    DWORD FPSPosX;
+    DWORD FPSPosY;
+    
     DWORD DefaultFOV;
     BOOL AllowDynamicFOV;
     DWORD FOVToggleKey;
-    float AimingFOVMultiplier;
+    FLOAT AimingFOVMultiplier;
+    
+    BOOL ShowFPS;
+    BOOL EnableFOV;
 };
 
 namespace Config

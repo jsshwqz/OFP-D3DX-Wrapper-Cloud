@@ -1,6 +1,7 @@
 #include "config.hpp"
 #include "d3d8to9.hpp"
 #include "d3d8-wrapper.hpp"
+#include "hooks.hpp"
 #include <d3d9.h>
 #include <stdio.h>
 #include <string.h>
@@ -45,6 +46,7 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID lpReserved)
     {
         Config::Log("OFP D3DX Wrapper: DLL_PROCESS_DETACH\n");
         
+        Hooks::Uninstall();
         D3D8To9::Shutdown();
         
         if (g_hRealD3D8)

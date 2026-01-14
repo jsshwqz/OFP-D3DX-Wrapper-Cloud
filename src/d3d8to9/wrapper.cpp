@@ -1,4 +1,5 @@
 #include "config.hpp"
+#include "hooks.hpp"
 #include <d3d9.h>
 #include <initguid.h>
 #include <stdio.h>
@@ -912,6 +913,21 @@ public:
                 Config::g_Config.FPSUpdateInterval, Config::g_Config.DefaultFOV);
         }
 
+        return hr;
+    }
+
+=======
+        
+        HRESULT hr = m_pD3D9->CreateDevice(Adapter, DeviceType, hFocusWindow, BehaviorFlags, &pp9, &pDevice9);
+        
+        if (SUCCEEDED(hr) && pDevice9)
+        {
+            Config::Log("Wrapper: Device created, installing hooks...\n");
+            Hooks::Install(pDevice9);
+            *ppReturnedDeviceInterface = pDevice9;
+        }
+        
+>>>>>>> Stashed changes
         return hr;
     }
 };
