@@ -1,5 +1,6 @@
 #include "config.hpp"
 #include "d3d8to9.hpp"
+#include "d3d8-wrapper.hpp"
 #include <d3d9.h>
 #include <stdio.h>
 #include <string.h>
@@ -30,18 +31,8 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID lpReserved)
                 g_pRealDirect3DCreate8 = (Direct3DCreate8_t)GetProcAddress(g_hRealD3D8, "Direct3DCreate8");
                 if (g_pRealDirect3DCreate8)
                 {
-                    Config::Log("OFP D3DX Wrapper: Loaded real d3d8.dll from %s\n", sysPath);
+                    Config::Log("OFP D3DX Wrapper: Loaded real d3d8.dll\n");
                 }
-                else
-                {
-                    Config::Log("OFP D3DX Wrapper: Failed to get Direct3DCreate8 from real d3d8.dll\n");
-                    FreeLibrary(g_hRealD3D8);
-                    g_hRealD3D8 = nullptr;
-                }
-            }
-            else
-            {
-                Config::Log("OFP D3DX Wrapper: Failed to load real d3d8.dll from %s\n", sysPath);
             }
 
             if (Config::g_Config.EnableWrapper && Config::g_Config.D3d8to9)
@@ -61,8 +52,6 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID lpReserved)
             FreeLibrary(g_hRealD3D8);
             g_hRealD3D8 = nullptr;
         }
-        
-        Config::Log("OFP D3DX Wrapper: Unloaded\n");
     }
     
     return TRUE;
@@ -72,7 +61,7 @@ extern "C" __declspec(dllexport) IDirect3D8* WINAPI Direct3DCreate8(UINT SDKVers
 {
     Config::Log("OFP D3DX Wrapper: Direct3DCreate8(SDKVersion=%u)\n", SDKVersion);
 
-    if (!Config::g_Config.EnableWrapper || !Config::g_Config.D3d8to9 || !g_pRealDirect3DCreate8)
+    if (!Config::g_Config.EnableWrapper || !Config::g_Config.D3d8to9)
     {
         if (g_pRealDirect3DCreate8)
             return g_pRealDirect3DCreate8(SDKVersion);
@@ -81,7 +70,7 @@ extern "C" __declspec(dllexport) IDirect3D8* WINAPI Direct3DCreate8(UINT SDKVers
 
     if (D3D8To9::g_bFallbackMode)
     {
-        Config::Log("OFP D3DX Wrapper: Using fallback mode\n");
+        Config::Log("OFP D3DX Wrapper: Fallback mode - using real d3d8\n");
         if (g_pRealDirect3DCreate8)
             return g_pRealDirect3DCreate8(SDKVersion);
         return nullptr;
@@ -94,15 +83,15 @@ extern "C" __declspec(dllexport) IDirect3D8* WINAPI Direct3DCreate8(UINT SDKVers
 
     if (!D3D8To9::g_pD3D9)
     {
-        Config::Log("OFP D3DX Wrapper: No D3D9, using fallback\n");
+        Config::Log("OFP D3DX Wrapper: No D3D9 - fallback\n");
         if (g_pRealDirect3DCreate8)
             return g_pRealDirect3DCreate8(SDKVersion);
         return nullptr;
     }
 
-    Config::Log("OFP D3DX Wrapper: Using real d3d8.dll (fallback mode)\n");
+    Config::Log("OFP D3DX Wrapper: Creating D3D8 wrapper with D3D9 enhancements\n");
+    Config::Log("  - Anisotropic filtering: %dx\n", Config::g_Config.AnisotropicFiltering);
+    Config::Log("  - VSync: %s\n", Config::g_Config.EnableVSync ? "ON" : "OFF");
 
-    if (g_pRealDirect3DCreate8)
-        return g_pRealDirect3DCreate8(SDKVersion);
-    return nullptr;
+    return CreateD3D8Wrapper(D3D8To9::g_pD3D9);
 }
