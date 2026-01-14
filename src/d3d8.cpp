@@ -8,13 +8,10 @@ struct Config
 {
     DWORD AnisotropicFiltering = 16;
     DWORD FPSUpdateInterval = 1;
-    DWORD FPSPosX = 10;
-    DWORD FPSPosY = 10;
     DWORD DefaultFOV = 90;
     DWORD FOVToggleKey = 45;
     FLOAT AimingFOVMultiplier = 0.6f;
     BOOL EnableVSync = FALSE;
-    BOOL ShowFPS = TRUE;
     BOOL EnableFOV = TRUE;
     BOOL AllowDynamicFOV = FALSE;
 };
@@ -37,11 +34,6 @@ void LoadConfig()
 
     g_Config.AnisotropicFiltering = GetPrivateProfileIntA("d3d9", "AnisotropicFiltering", 16, path);
     g_Config.EnableVSync = GetPrivateProfileIntA("d3d9", "EnableVSync", 0, path);
-    g_Config.ShowFPS = GetPrivateProfileIntA("FPS", "ShowFPS", 1, path);
-    g_Config.FPSUpdateInterval = GetPrivateProfileIntA("FPS", "FPSUpdateInterval", 1, path);
-    g_Config.FPSPosX = GetPrivateProfileIntA("FPS", "FPSPosX", 10, path);
-    g_Config.FPSPosY = GetPrivateProfileIntA("FPS", "FPSPosY", 10, path);
-    g_Config.EnableFOV = GetPrivateProfileIntA("FOV", "EnableFOV", 1, path);
     g_Config.DefaultFOV = GetPrivateProfileIntA("FOV", "DefaultFOV", 90, path);
     g_Config.AllowDynamicFOV = GetPrivateProfileIntA("FOV", "AllowDynamicFOV", 0, path);
     g_Config.FOVToggleKey = GetPrivateProfileIntA("FOV", "FOVToggleKey", 45, path);
@@ -162,10 +154,8 @@ interface IDirect3DDevice8 : public IUnknown
     virtual float STDMETHODCALLTYPE GetNPatchMode(void) = 0;
     virtual HRESULT STDMETHODCALLTYPE DrawIndexedPrimitiveStrided(D3DPRIMITIVETYPE, UINT, UINT, UINT, UINT, UINT) = 0;
     virtual HRESULT STDMETHODCALLTYPE ValidateDevice(DWORD*) = 0;
-    virtual HRESULT STDMETHODCALLTYPE SetPaletteEntries(UINT, PALETTEENTRY*) = 0;
-    virtual HRESULT STDMETHODCALLTYPE GetPaletteEntries(UINT, PALETTEENTRY*) = 0;
-    virtual HRESULT STDMETHODCALLTYPE SetCurrentTexturePalette(UINT) = 0;
     virtual UINT STDMETHODCALLTYPE GetCurrentTexturePalette(void) = 0;
+    virtual HRESULT STDMETHODCALLTYPE SetCurrentTexturePalette(UINT) = 0;
     virtual HRESULT STDMETHODCALLTYPE SetFVF(DWORD) = 0;
     virtual HRESULT STDMETHODCALLTYPE GetFVF(DWORD*) = 0;
     virtual HRESULT STDMETHODCALLTYPE SetStreamSource(UINT, IDirect3DVertexBuffer9*, UINT) = 0;
@@ -314,206 +304,6 @@ public:
     virtual void STDMETHODCALLTYPE GetGammaRamp(UINT a, D3DGAMMARAMP* p)
     {
         m_pDevice->GetGammaRamp(a, p);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateTexture(UINT w, UINT h, UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DTexture9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateTexture(w, h, l, u, f, p, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateVolumeTexture(UINT w, UINT h, UINT d, UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DVolumeTexture9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateVolumeTexture(w, h, d, l, u, f, p, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateCubeTexture(UINT s, UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DCubeTexture9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateCubeTexture(s, l, u, f, p, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateVertexBuffer(UINT l, DWORD u, DWORD f, D3DPOOL p, IDirect3DVertexBuffer9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateVertexBuffer(l, u, f, p, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateIndexBuffer(UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DIndexBuffer9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateIndexBuffer(l, u, f, p, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateRenderTarget(UINT w, UINT h, D3DFORMAT f, D3DMULTISAMPLE_TYPE m, DWORD q, BOOL l, IDirect3DSurface9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateRenderTarget(w, h, f, m, q, l, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateDepthStencilSurface(UINT w, UINT h, D3DFORMAT f, D3DMULTISAMPLE_TYPE m, DWORD q, BOOL d, IDirect3DSurface9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateDepthStencilSurface(w, h, f, m, q, d, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateOffscreenPlainSurface(UINT w, UINT h, D3DFORMAT f, D3DPOOL p, IDirect3DSurface9** pp, HANDLE* h)
-    {
-        return m_pDevice->CreateOffscreenPlainSurface(w, h, f, p, pp, h);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateVertexDeclaration(D3DVERTEXELEMENT9* e, IDirect3DVertexDeclaration9** pp)
-    {
-        return m_pDevice->CreateVertexDeclaration(e, pp);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreateVertexShader(DWORD* f, IDirect3DVertexShader9** pp)
-    {
-        return m_pDevice->CreateVertexShader(f, pp);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE CreatePixelShader(DWORD* f, IDirect3DPixelShader9** pp)
-    {
-        return m_pDevice->CreatePixelShader(f, pp);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetVertexDeclaration(IDirect3DVertexDeclaration9* p)
-    {
-        return m_pDevice->SetVertexDeclaration(p);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetVertexDeclaration(IDirect3DVertexDeclaration9** pp)
-    {
-        return m_pDevice->GetVertexDeclaration(pp);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetVertexShader(IDirect3DVertexShader9* p)
-    {
-        return m_pDevice->SetVertexShader(p);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetVertexShader(IDirect3DVertexShader9** pp)
-    {
-        return m_pDevice->GetVertexShader(pp);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetVertexShaderConstantF(UINT r, float* p, UINT c)
-    {
-        return m_pDevice->SetVertexShaderConstantF(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetVertexShaderConstantF(UINT r, float* p, UINT c)
-    {
-        return m_pDevice->GetVertexShaderConstantF(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetVertexShaderConstantI(UINT r, int* p, UINT c)
-    {
-        return m_pDevice->SetVertexShaderConstantI(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetVertexShaderConstantI(UINT r, int* p, UINT c)
-    {
-        return m_pDevice->GetVertexShaderConstantI(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetVertexShaderConstantB(UINT r, BOOL* p, UINT c)
-    {
-        return m_pDevice->SetVertexShaderConstantB(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetVertexShaderConstantB(UINT r, BOOL* p, UINT c)
-    {
-        return m_pDevice->GetVertexShaderConstantB(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetPixelShader(IDirect3DPixelShader9* p)
-    {
-        return m_pDevice->SetPixelShader(p);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetPixelShader(IDirect3DPixelShader9** pp)
-    {
-        return m_pDevice->GetPixelShader(pp);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetPixelShaderConstantF(UINT r, float* p, UINT c)
-    {
-        return m_pDevice->SetPixelShaderConstantF(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetPixelShaderConstantF(UINT r, float* p, UINT c)
-    {
-        return m_pDevice->GetPixelShaderConstantF(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetPixelShaderConstantI(UINT r, int* p, UINT c)
-    {
-        return m_pDevice->SetPixelShaderConstantI(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetPixelShaderConstantI(UINT r, int* p, UINT c)
-    {
-        return m_pDevice->GetPixelShaderConstantI(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetPixelShaderConstantB(UINT r, BOOL* p, UINT c)
-    {
-        return m_pDevice->SetPixelShaderConstantB(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetPixelShaderConstantB(UINT r, BOOL* p, UINT c)
-    {
-        return m_pDevice->GetPixelShaderConstantB(r, p, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE DrawPrimitive(D3DPRIMITIVETYPE t, UINT s, UINT c)
-    {
-        return m_pDevice->DrawPrimitive(t, s, c);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE DrawIndexedPrimitive(D3DPRIMITIVETYPE t, INT b, UINT m, UINT n, UINT s, UINT p)
-    {
-        return m_pDevice->DrawIndexedPrimitive(t, b, m, n, s, p);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE DrawPrimitiveUP(D3DPRIMITIVETYPE t, UINT c, void* d, UINT s)
-    {
-        return m_pDevice->DrawPrimitiveUP(t, c, d, s);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE DrawIndexedPrimitiveUP(D3DPRIMITIVETYPE t, UINT m, UINT n, UINT c, void* i, D3DFORMAT f, void* v, UINT s)
-    {
-        return m_pDevice->DrawIndexedPrimitiveUP(t, m, n, c, i, f, v, s);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE ProcessVertices(UINT s, UINT d, UINT c, IDirect3DVertexBuffer9* b, IDirect3DVertexDeclaration9* dcl, DWORD f)
-    {
-        return m_pDevice->ProcessVertices(s, d, c, b, dcl, f);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetVertexStream(UINT s, IDirect3DVertexBuffer9* b, UINT st)
-    {
-        return m_pDevice->SetVertexStream(s, b, st);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetVertexStream(UINT s, IDirect3DVertexBuffer9** b, UINT* st)
-    {
-        return m_pDevice->GetVertexStream(s, b, st);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetVertexStreamFreq(UINT s, DWORD f)
-    {
-        return m_pDevice->SetVertexStreamFreq(s, f);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetVertexStreamFreq(UINT s, DWORD* f)
-    {
-        return m_pDevice->GetVertexStreamFreq(s, f);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE SetIndices(IDirect3DIndexBuffer9* b)
-    {
-        return m_pDevice->SetIndices(b);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetIndices(IDirect3DIndexBuffer9** pp)
-    {
-        return m_pDevice->GetIndices(pp);
     }
 
     virtual void UpdateFPS()
@@ -732,16 +522,6 @@ public:
         return m_pDevice->ValidateDevice(p);
     }
 
-    virtual HRESULT STDMETHODCALLTYPE SetPaletteEntries(UINT p, PALETTEENTRY* e)
-    {
-        return m_pDevice->SetPaletteEntries(p, e);
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetPaletteEntries(UINT p, PALETTEENTRY* e)
-    {
-        return m_pDevice->GetPaletteEntries(p, e);
-    }
-
     virtual UINT STDMETHODCALLTYPE GetCurrentTexturePalette(void)
     {
         return m_pDevice->GetCurrentTexturePalette();
@@ -764,22 +544,22 @@ public:
 
     virtual HRESULT STDMETHODCALLTYPE SetStreamSource(UINT s, IDirect3DVertexBuffer9* b, UINT st)
     {
-        return m_pDevice->SetStreamSource(s, b, st);
+        return m_pDevice->SetVertexStream(s, b, st);
     }
 
     virtual HRESULT STDMETHODCALLTYPE GetStreamSource(UINT s, IDirect3DVertexBuffer9** b, UINT* st)
     {
-        return m_pDevice->GetStreamSource(s, b, st);
+        return m_pDevice->GetVertexStream(s, b, st);
     }
 
     virtual HRESULT STDMETHODCALLTYPE SetStreamSourceFreq(UINT s, DWORD f)
     {
-        return m_pDevice->SetStreamSourceFreq(s, f);
+        return m_pDevice->SetVertexStreamFreq(s, f);
     }
 
     virtual HRESULT STDMETHODCALLTYPE GetStreamSourceFreq(UINT s, DWORD* f)
     {
-        return m_pDevice->GetStreamSourceFreq(s, f);
+        return m_pDevice->GetVertexStreamFreq(s, f);
     }
 
     virtual HRESULT STDMETHODCALLTYPE SetRenderTarget(DWORD i, IDirect3DSurface9* p)
@@ -841,6 +621,176 @@ public:
     virtual HRESULT STDMETHODCALLTYPE Clear(DWORD c, D3DRECT* r, DWORD f, D3DCOLOR col, float z, DWORD s)
     {
         return m_pDevice->Clear(c, r, f, col, z, s);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateTexture(UINT w, UINT h, UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DTexture9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateTexture(w, h, l, u, f, p, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateVolumeTexture(UINT w, UINT h, UINT d, UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DVolumeTexture9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateVolumeTexture(w, h, d, l, u, f, p, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateCubeTexture(UINT s, UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DCubeTexture9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateCubeTexture(s, l, u, f, p, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateVertexBuffer(UINT l, DWORD u, DWORD f, D3DPOOL p, IDirect3DVertexBuffer9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateVertexBuffer(l, u, f, p, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateIndexBuffer(UINT l, DWORD u, D3DFORMAT f, D3DPOOL p, IDirect3DIndexBuffer9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateIndexBuffer(l, u, f, p, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateRenderTarget(UINT w, UINT h, D3DFORMAT f, D3DMULTISAMPLE_TYPE m, DWORD q, BOOL l, IDirect3DSurface9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateRenderTarget(w, h, f, m, q, l, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateDepthStencilSurface(UINT w, UINT h, D3DFORMAT f, D3DMULTISAMPLE_TYPE m, DWORD q, BOOL d, IDirect3DSurface9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateDepthStencilSurface(w, h, f, m, q, d, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateOffscreenPlainSurface(UINT w, UINT h, D3DFORMAT f, D3DPOOL p, IDirect3DSurface9** pp, HANDLE* h)
+    {
+        return m_pDevice->CreateOffscreenPlainSurface(w, h, f, p, pp, h);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateVertexDeclaration(D3DVERTEXELEMENT9* e, IDirect3DVertexDeclaration9** pp)
+    {
+        return m_pDevice->CreateVertexDeclaration(e, pp);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreateVertexShader(DWORD* f, IDirect3DVertexShader9** pp)
+    {
+        return m_pDevice->CreateVertexShader(f, pp);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE CreatePixelShader(DWORD* f, IDirect3DPixelShader9** pp)
+    {
+        return m_pDevice->CreatePixelShader(f, pp);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetVertexDeclaration(IDirect3DVertexDeclaration9* p)
+    {
+        return m_pDevice->SetVertexDeclaration(p);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetVertexDeclaration(IDirect3DVertexDeclaration9** pp)
+    {
+        return m_pDevice->GetVertexDeclaration(pp);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetVertexShader(IDirect3DVertexShader9* p)
+    {
+        return m_pDevice->SetVertexShader(p);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetVertexShader(IDirect3DVertexShader9** pp)
+    {
+        return m_pDevice->GetVertexShader(pp);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetVertexShaderConstantF(UINT r, float* p, UINT c)
+    {
+        return m_pDevice->SetVertexShaderConstantF(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetVertexShaderConstantF(UINT r, float* p, UINT c)
+    {
+        return m_pDevice->GetVertexShaderConstantF(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetVertexShaderConstantI(UINT r, int* p, UINT c)
+    {
+        return m_pDevice->SetVertexShaderConstantI(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetVertexShaderConstantI(UINT r, int* p, UINT c)
+    {
+        return m_pDevice->GetVertexShaderConstantI(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetVertexShaderConstantB(UINT r, BOOL* p, UINT c)
+    {
+        return m_pDevice->SetVertexShaderConstantB(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetVertexShaderConstantB(UINT r, BOOL* p, UINT c)
+    {
+        return m_pDevice->GetVertexShaderConstantB(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetPixelShader(IDirect3DPixelShader9* p)
+    {
+        return m_pDevice->SetPixelShader(p);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetPixelShader(IDirect3DPixelShader9** pp)
+    {
+        return m_pDevice->GetPixelShader(pp);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetPixelShaderConstantF(UINT r, float* p, UINT c)
+    {
+        return m_pDevice->SetPixelShaderConstantF(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetPixelShaderConstantF(UINT r, float* p, UINT c)
+    {
+        return m_pDevice->GetPixelShaderConstantF(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetPixelShaderConstantI(UINT r, int* p, UINT c)
+    {
+        return m_pDevice->SetPixelShaderConstantI(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetPixelShaderConstantI(UINT r, int* p, UINT c)
+    {
+        return m_pDevice->GetPixelShaderConstantI(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE SetPixelShaderConstantB(UINT r, BOOL* p, UINT c)
+    {
+        return m_pDevice->SetPixelShaderConstantB(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE GetPixelShaderConstantB(UINT r, BOOL* p, UINT c)
+    {
+        return m_pDevice->GetPixelShaderConstantB(r, p, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE DrawPrimitive(D3DPRIMITIVETYPE t, UINT s, UINT c)
+    {
+        return m_pDevice->DrawPrimitive(t, s, c);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE DrawIndexedPrimitive(D3DPRIMITIVETYPE t, INT b, UINT m, UINT n, UINT s, UINT p)
+    {
+        return m_pDevice->DrawIndexedPrimitive(t, b, m, n, s, p);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE DrawPrimitiveUP(D3DPRIMITIVETYPE t, UINT c, void* d, UINT s)
+    {
+        return m_pDevice->DrawPrimitiveUP(t, c, d, s);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE DrawIndexedPrimitiveUP(D3DPRIMITIVETYPE t, UINT m, UINT n, UINT c, void* i, D3DFORMAT f, void* v, UINT s)
+    {
+        return m_pDevice->DrawIndexedPrimitiveUP(t, m, n, c, i, f, v, s);
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE ProcessVertices(UINT s, UINT d, UINT c, IDirect3DVertexBuffer9* b, IDirect3DVertexDeclaration9* dcl, DWORD f)
+    {
+        return m_pDevice->ProcessVertices(s, d, c, b, dcl, f);
     }
 };
 
