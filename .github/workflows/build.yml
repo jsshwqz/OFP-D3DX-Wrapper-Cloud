@@ -16,14 +16,13 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Clean build directory
-      run: Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
-
     - name: Build
       working-directory: ${{github.workspace}}
       run: |
-        msbuild OFPD3DXWrapper.vcxproj /p:Configuration=Release /p:Platform=Win32 /fileLogger /flp:logfile=build.log;verbosity=detailed 2>&1 | tee build_output.txt
-        if ($LASTEXITCODE -ne 0) { Get-Content build.log }
+        $env:INCLUDE = "$env:INCLUDE;C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared;C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um"
+        $env:LIB = "$env:LIB;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0\um\x86"
+        msbuild OFPD3DXWrapper.vcxproj /p:Configuration=Release /p:Platform=Win32 /v:detailed 2>&1 | Out-File build.log
+        if ($LASTEXITCODE -ne 0) { Get-Content build.log | Select-String -Pattern "error|warning" -CaseSensitive:$false | Select-Object -First 50 }
 
     - name: Upload build log
       if: failure()
