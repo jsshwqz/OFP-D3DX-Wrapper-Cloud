@@ -31,11 +31,3 @@ jobs:
       with:
         name: ofp-d3dx-wrapper
         path: build/Release/
-```
-
-保存路径：`D:\ofp\OFP-D3DX-Wrapper-Source\OFP-D3DX-Wrapper-Cloud-main\.github\workflows\build.yml`
-
-保存后运行：
-```
-git add -A && git commit -m "Clean build directory" && git push origin main
-```
