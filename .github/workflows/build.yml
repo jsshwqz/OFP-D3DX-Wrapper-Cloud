@@ -13,18 +13,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Show available generators
-      run: cmake --help | findstr -i "Generator"
+    - name: Setup MSVC
+      uses: egor-tensin/setup-msvc@v4
+      with:
+        arch: x64
 
-    - name: Configure CMake
-      run: cmake -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build
-      working-directory: ${{github.workspace}}/build
-      run: cmake --build .
+    - name: Configure and Build
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --config Release
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ofp-d3dx-wrapper
-        path: build/
+        path: build/Release/
