@@ -2,10 +2,12 @@
 
 #include <d3d9.h>
 
-interface IDirect3D8;
-interface IDirect3DDevice8;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef interface IDirect3D8 IDirect3D8;
-typedef interface IDirect3DDevice8 IDirect3DDevice8;
+IDirect3D8* __cdecl CreateD3D8Wrapper(IDirect3D9* pD3D9);
 
-IDirect3D8* CreateD3D8Wrapper(IDirect3D9* pD3D9);
+#ifdef __cplusplus
+}
+#endif
