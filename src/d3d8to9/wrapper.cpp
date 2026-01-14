@@ -1,5 +1,6 @@
 #include "config.hpp"
 #include <d3d9.h>
+#include <d3dx9.h>
 #include <initguid.h>
 #include <stdio.h>
 #include <time.h>
