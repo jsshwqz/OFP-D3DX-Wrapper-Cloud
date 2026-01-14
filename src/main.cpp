@@ -1,6 +1,5 @@
 #include "config.hpp"
 #include "d3d8to9.hpp"
-#include "d3d8to9-wrapper.hpp"
 #include <d3d9.h>
 
 namespace D3D8
@@ -37,9 +36,11 @@ namespace D3D8
             return nullptr;
         }
         
-        Config::Log("D3D8: Redirecting to D3D9 wrapper\n");
+        Config::Log("D3D8: Wrapper active - forwarding to original D3D8\n");
         
-        return D3D8To9::CreateD3D8Wrapper(D3D8To9::g_pD3D9, SDKVersion);
+        if (Original_Direct3DCreate8)
+            return Original_Direct3DCreate8(SDKVersion);
+        return nullptr;
     }
 }
 
