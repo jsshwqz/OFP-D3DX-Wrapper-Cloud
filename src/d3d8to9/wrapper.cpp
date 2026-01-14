@@ -86,11 +86,6 @@ public:
         return m_pDevice9->GetAvailableTextureMem();
     }
 
-    STDMETHOD(EvictManagedTextures)(THIS) override
-    {
-        return m_pDevice9->EvictManagedTextures();
-    }
-
     STDMETHOD(EvictManagedResources)(THIS) override
     {
         return m_pDevice9->EvictManagedResources();
@@ -171,14 +166,14 @@ public:
         return m_pDevice9->SetDialogBoxMode(bEnableDialogs);
     }
 
-    STDMETHOD(SetGammaRamp)(THIS_ UINT iSwapChain, DWORD Flags, CONST D3DGAMMARAMP* pRamp) override
+    STDMETHOD_(void, SetGammaRamp)(THIS_ UINT iSwapChain, DWORD Flags, CONST D3DGAMMARAMP* pRamp) override
     {
-        return m_pDevice9->SetGammaRamp(iSwapChain, Flags, pRamp);
+        m_pDevice9->SetGammaRamp(iSwapChain, Flags, pRamp);
     }
 
-    STDMETHOD(GetGammaRamp)(THIS_ UINT iSwapChain, D3DGAMMARAMP* pRamp) override
+    STDMETHOD_(void, GetGammaRamp)(THIS_ UINT iSwapChain, D3DGAMMARAMP* pRamp) override
     {
-        return m_pDevice9->GetGammaRamp(iSwapChain, pRamp);
+        m_pDevice9->GetGammaRamp(iSwapChain, pRamp);
     }
 
     STDMETHOD(CreateTexture)(THIS_ UINT Width, UINT Height, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DTexture9** ppTexture, HANDLE* pSharedHandle) override
@@ -194,11 +189,6 @@ public:
     STDMETHOD(CreateCubeTexture)(THIS_ UINT EdgeLength, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DCubeTexture9** ppCubeTexture, HANDLE* pSharedHandle) override
     {
         return m_pDevice9->CreateCubeTexture(EdgeLength, Levels, Usage, Format, Pool, ppCubeTexture, pSharedHandle);
-    }
-
-    STDMETHOD(CreateTextureFromFile)(THIS_ LPCSTR pSrcFile, IDirect3DTexture9** ppTexture) override
-    {
-        return m_pDevice9->CreateTextureFromFile(pSrcFile, ppTexture);
     }
 
     STDMETHOD(CreateVertexBuffer)(THIS_ UINT Length, DWORD Usage, DWORD FVF, D3DPOOL Pool, IDirect3DVertexBuffer9** ppVertexBuffer, HANDLE* pSharedHandle) override
@@ -577,16 +567,6 @@ public:
         return m_pDevice9->DrawIndexedPrimitiveStrided(PrimitiveType, BaseVertexIndex, MinIndex, NumVertices, startIndex, primCount);
     }
 
-    STDMETHOD(SetTextureStageStateOld)(THIS_ DWORD Stage, D3DTEXTURESTAGESTATETYPE Type, DWORD Value) override
-    {
-        return m_pDevice9->SetTextureStageStateOld(Stage, Type, Value);
-    }
-
-    STDMETHOD(GetTextureStageStateOld)(THIS_ DWORD Stage, D3DTEXTURESTAGESTATETYPE Type, DWORD* pValue) override
-    {
-        return m_pDevice9->GetTextureStageStateOld(Stage, Type, pValue);
-    }
-
     STDMETHOD(ValidateDevice)(THIS_ DWORD* pNumPasses) override
     {
         return m_pDevice9->ValidateDevice(pNumPasses);
@@ -612,29 +592,109 @@ public:
         return m_pDevice9->GetCurrentTexturePalette();
     }
 
-    STDMETHOD(SetScissorRectOld)(THIS_ CONST RECT* pRect) override
+    STDMETHOD(SetScissorRect)(THIS_ CONST RECT* pRect) override
     {
-        return m_pDevice9->SetScissorRectOld(pRect);
+        return m_pDevice9->SetScissorRect(pRect);
     }
 
-    STDMETHOD(GetScissorRectOld)(THIS_ RECT* pRect) override
+    STDMETHOD(GetScissorRect)(THIS_ RECT* pRect) override
     {
-        return m_pDevice9->GetScissorRectOld(pRect);
+        return m_pDevice9->GetScissorRect(pRect);
     }
 
-    STDMETHOD(ShowCursor)(THIS_ BOOL bShow, BOOL bUseAlpha) override
+    STDMETHOD(SetSoftwareVertexProcessing)(THIS_ BOOL bSoftware) override
     {
-        return m_pDevice9->ShowCursor(bShow, bUseAlpha);
+        return m_pDevice9->SetSoftwareVertexProcessing(bSoftware);
     }
 
-    STDMETHOD(GetGammaRampOld)(THIS_ D3DGAMMARAMP* pRamp) override
+    STDMETHOD_(BOOL, GetSoftwareVertexProcessing)(THIS) override
     {
-        return m_pDevice9->GetGammaRampOld(pRamp);
+        return m_pDevice9->GetSoftwareVertexProcessing();
     }
 
-    STDMETHOD(SetGammaRampOld)(THIS_ DWORD Flags, CONST D3DGAMMARAMP* pRamp) override
+    STDMETHOD(SetNPatchMode)(THIS_ float nSegments) override
     {
-        return m_pDevice9->SetGammaRampOld(Flags, pRamp);
+        return m_pDevice9->SetNPatchMode(nSegments);
+    }
+
+    STDMETHOD_(float, GetNPatchMode)(THIS) override
+    {
+        return m_pDevice9->GetNPatchMode();
+    }
+
+    STDMETHOD(SetFVF)(THIS_ DWORD FVF) override
+    {
+        return m_pDevice9->SetFVF(FVF);
+    }
+
+    STDMETHOD(GetFVF)(THIS_ DWORD* pFVF) override
+    {
+        return m_pDevice9->GetFVF(pFVF);
+    }
+
+    STDMETHOD(SetStreamSource)(THIS_ UINT Stream, IDirect3DVertexBuffer9* pStreamData, UINT Stride) override
+    {
+        return m_pDevice9->SetStreamSource(Stream, pStreamData, Stride);
+    }
+
+    STDMETHOD(GetStreamSource)(THIS_ UINT Stream, IDirect3DVertexBuffer9** ppStreamData, UINT* pStride) override
+    {
+        return m_pDevice9->GetStreamSource(Stream, ppStreamData, pStride);
+    }
+
+    STDMETHOD(SetStreamSourceFreq)(THIS_ UINT Stream, DWORD Frequency) override
+    {
+        return m_pDevice9->SetStreamSourceFreq(Stream, Frequency);
+    }
+
+    STDMETHOD(GetStreamSourceFreq)(THIS_ UINT Stream, DWORD* pFrequency) override
+    {
+        return m_pDevice9->GetStreamSourceFreq(Stream, pFrequency);
+    }
+
+    STDMETHOD(SetRenderTarget)(THIS_ DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget) override
+    {
+        return m_pDevice9->SetRenderTarget(RenderTargetIndex, pRenderTarget);
+    }
+
+    STDMETHOD(GetRenderTarget)(THIS_ DWORD RenderTargetIndex, IDirect3DSurface9** ppRenderTarget) override
+    {
+        return m_pDevice9->GetRenderTarget(RenderTargetIndex, ppRenderTarget);
+    }
+
+    STDMETHOD(SetDepthStencilSurface)(THIS_ IDirect3DSurface9* pNewZStencil) override
+    {
+        return m_pDevice9->SetDepthStencilSurface(pNewZStencil);
+    }
+
+    STDMETHOD(GetDepthStencilSurface)(THIS_ IDirect3DSurface9** ppZStencilSurface) override
+    {
+        return m_pDevice9->GetDepthStencilSurface(ppZStencilSurface);
+    }
+
+    STDMETHOD(SetTransform)(THIS_ D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX* pMatrix) override
+    {
+        return m_pDevice9->SetTransform(State, pMatrix);
+    }
+
+    STDMETHOD(GetTransform)(THIS_ D3DTRANSFORMSTATETYPE State, D3DMATRIX* pMatrix) override
+    {
+        return m_pDevice9->GetTransform(State, pMatrix);
+    }
+
+    STDMETHOD(MultiplyTransform)(THIS_ D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX* pMatrix) override
+    {
+        return m_pDevice9->MultiplyTransform(State, pMatrix);
+    }
+
+    STDMETHOD(DeletePatch)(THIS_ UINT Handle) override
+    {
+        return m_pDevice9->DeletePatch(Handle);
+    }
+
+    STDMETHOD(CreateQuery)(THIS_ D3DQUERYTYPE Type, IDirect3DQuery9** ppQuery) override
+    {
+        return m_pDevice9->CreateQuery(Type, ppQuery);
     }
 
     void UpdateFPS()
@@ -674,16 +734,6 @@ public:
         return m_pDevice9->ColorFill(pSurface, pRect, Color);
     }
 
-    STDMETHOD(CreateQuery)(THIS_ D3DQUERYTYPE Type, IDirect3DQuery9** ppQuery) override
-    {
-        return m_pDevice9->CreateQuery(Type, ppQuery);
-    }
-
-    STDMETHOD(DeletePatch)(THIS_ UINT Handle) override
-    {
-        return m_pDevice9->DeletePatch(Handle);
-    }
-
     STDMETHOD(DrawRectPatch)(THIS_ UINT Handle, CONST float* pNumSegs, CONST D3DRECTPATCH_INFO* pPatchInfo) override
     {
         return m_pDevice9->DrawRectPatch(Handle, pNumSegs, pPatchInfo);
@@ -699,79 +749,9 @@ public:
         return m_pDevice9->GetFrontBufferData(iSwapChain, pDestSurface);
     }
 
-    STDMETHOD(GetRenderTarget)(THIS_ DWORD RenderTargetIndex, IDirect3DSurface9** ppRenderTarget) override
+    STDMETHOD(GetRenderTargetData)(THIS_ IDirect3DSurface9* pRenderTarget, IDirect3DSurface9* pDestSurface) override
     {
-        return m_pDevice9->GetRenderTarget(RenderTargetIndex, ppRenderTarget);
-    }
-
-    STDMETHOD(SetRenderTarget)(THIS_ DWORD RenderTargetIndex, IDirect3DSurface9* pRenderTarget) override
-    {
-        return m_pDevice9->SetRenderTarget(RenderTargetIndex, pRenderTarget);
-    }
-
-    STDMETHOD(GetDepthStencilSurface)(THIS_ IDirect3DSurface9** ppDepthStencilSurface) override
-    {
-        return m_pDevice9->GetDepthStencilSurface(ppDepthStencilSurface);
-    }
-
-    STDMETHOD(SetDepthStencilSurface)(THIS_ IDirect3DSurface9* pNewZStencil) override
-    {
-        return m_pDevice9->SetDepthStencilSurface(pNewZStencil);
-    }
-
-    STDMETHOD(GetTransform)(THIS_ D3DTRANSFORMSTATETYPE State, D3DMATRIX* pMatrix) override
-    {
-        return m_pDevice9->GetTransform(State, pMatrix);
-    }
-
-    STDMETHOD(SetTransform)(THIS_ D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX* pMatrix) override
-    {
-        return m_pDevice9->SetTransform(State, pMatrix);
-    }
-
-    STDMETHOD(MultiplyTransform)(THIS_ D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX* pMatrix) override
-    {
-        return m_pDevice9->MultiplyTransform(State, pMatrix);
-    }
-
-    STDMETHOD(GetFVF)(THIS_ DWORD* pFVF) override
-    {
-        return m_pDevice9->GetFVF(pFVF);
-    }
-
-    STDMETHOD(SetFVF)(THIS_ DWORD FVF) override
-    {
-        return m_pDevice9->SetFVF(FVF);
-    }
-
-    STDMETHOD(GetStreamSource)(THIS_ UINT Stream, IDirect3DVertexBuffer9** ppStreamData, UINT* pStride) override
-    {
-        return m_pDevice9->GetStreamSource(Stream, ppStreamData, pStride);
-    }
-
-    STDMETHOD(SetStreamSource)(THIS_ UINT Stream, IDirect3DVertexBuffer9* pStreamData, UINT Stride) override
-    {
-        return m_pDevice9->SetStreamSource(Stream, pStreamData, Stride);
-    }
-
-    STDMETHOD(GetStreamSourceFreq)(THIS_ UINT Stream, DWORD* pFrequency) override
-    {
-        return m_pDevice9->GetStreamSourceFreq(Stream, pFrequency);
-    }
-
-    STDMETHOD(SetStreamSourceFreq)(THIS_ UINT Stream, DWORD Frequency) override
-    {
-        return m_pDevice9->SetStreamSourceFreq(Stream, Frequency);
-    }
-
-    STDMETHOD(GetCurrentTexturePalette)(THIS_ UINT* pPaletteNumber) override
-    {
-        return m_pDevice9->GetCurrentTexturePalette(pPaletteNumber);
-    }
-
-    STDMETHOD(SetCurrentTexturePalette)(THIS_ UINT PaletteNumber) override
-    {
-        return m_pDevice9->SetCurrentTexturePalette(PaletteNumber);
+        return m_pDevice9->GetRenderTargetData(pRenderTarget, pDestSurface);
     }
 
     STDMETHOD(StretchRect)(THIS_ IDirect3DSurface9* pSourceSurface, CONST RECT* pSourceRect, IDirect3DSurface9* pDestSurface, CONST RECT* pDestRect, D3DTEXTUREFILTERTYPE Filter) override
@@ -779,19 +759,14 @@ public:
         return m_pDevice9->StretchRect(pSourceSurface, pSourceRect, pDestSurface, pDestRect, Filter);
     }
 
-    STDMETHOD(UpdateSurface)(THIS_ IDirect3DSurface9* pSourceSurface, CONST RECT* pSourceRect, IDirect3DSurface9* pDestinationSurface, CONST POINT* pDestinationPoint) override
+    STDMETHOD(UpdateSurface)(THIS_ IDirect3DSurface9* pSourceSurface, CONST RECT* pSourceRect, IDirect3DSurface9* pDestSurface, CONST POINT* pDestPoint) override
     {
-        return m_pDevice9->UpdateSurface(pSourceSurface, pSourceRect, pDestinationSurface, pDestinationPoint);
+        return m_pDevice9->UpdateSurface(pSourceSurface, pSourceRect, pDestSurface, pDestPoint);
     }
 
     STDMETHOD(UpdateTexture)(THIS_ IDirect3DBaseTexture9* pSourceTexture, IDirect3DBaseTexture9* pDestinationTexture) override
     {
         return m_pDevice9->UpdateTexture(pSourceTexture, pDestinationTexture);
-    }
-
-    STDMETHOD(GetRenderTargetData)(THIS_ IDirect3DSurface9* pRenderTarget, IDirect3DSurface9* pDestSurface) override
-    {
-        return m_pDevice9->GetRenderTargetData(pRenderTarget, pDestSurface);
     }
 };
 
