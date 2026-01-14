@@ -779,7 +779,7 @@ public:
         return m_pDevice9->UpdateSurface(pSourceSurface, pSourceRect, pDestinationSurface, pDestinationPoint);
     }
 
-    STDMETHOD(UpdateTexture)(THIS_ IDirect3DSurface9* pSourceTexture, IDirect3DSurface9* pDestinationTexture) override
+    STDMETHOD(UpdateTexture)(THIS_ IDirect3DBaseTexture9* pSourceTexture, IDirect3DBaseTexture9* pDestinationTexture) override
     {
         return m_pDevice9->UpdateTexture(pSourceTexture, pDestinationTexture);
     }
