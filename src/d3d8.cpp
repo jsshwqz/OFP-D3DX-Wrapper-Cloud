@@ -89,7 +89,9 @@ public:
     virtual HRESULT STDMETHODCALLTYPE GetSamplerState(DWORD, D3DSAMPLERSTATETYPE, DWORD*) { return E_NOTIMPL; }
     virtual HRESULT STDMETHODCALLTYPE SetScissorRect(CONST RECT*) { return S_OK; }
     virtual HRESULT STDMETHODCALLTYPE GetScissorRect(RECT*) { return E_NOTIMPL; }
+    virtual void STDMETHODCALLTYPE SetSoftwareVertexProcessing(BOOL) { }
     virtual BOOL STDMETHODCALLTYPE GetSoftwareVertexProcessing() { return FALSE; }
+    virtual void STDMETHODCALLTYPE SetNPatchMode(float) { }
     virtual float STDMETHODCALLTYPE GetNPatchMode() { return 0.0f; }
     virtual HRESULT STDMETHODCALLTYPE DrawPrimitive(D3DPRIMITIVETYPE, UINT, UINT) { return S_OK; }
     virtual HRESULT STDMETHODCALLTYPE DrawIndexedPrimitive(D3DPRIMITIVETYPE, INT, UINT, UINT, UINT, UINT) { return S_OK; }

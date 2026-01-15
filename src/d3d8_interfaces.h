@@ -135,9 +135,9 @@ interface IDirect3DDevice8 : public IUnknown {
     STDMETHOD(SetTextureStageState)(DWORD, D3DTEXTURESTAGESTATETYPE, DWORD) PURE;
     STDMETHOD(SetSamplerState)(DWORD, D3DSAMPLERSTATETYPE, DWORD) PURE;
     STDMETHOD(SetScissorRect)(CONST RECT*) PURE;
-    STDMETHOD(SetSoftwareVertexProcessing)(BOOL) PURE;
+    STDMETHOD_(void, SetSoftwareVertexProcessing)(BOOL) PURE;
     STDMETHOD_(BOOL, GetSoftwareVertexProcessing)() PURE;
-    STDMETHOD(SetNPatchMode)(float) PURE;
+    STDMETHOD_(void, SetNPatchMode)(float) PURE;
     STDMETHOD_(float, GetNPatchMode)() PURE;
     STDMETHOD(DrawPrimitive)(D3DPRIMITIVETYPE, UINT, UINT) PURE;
     STDMETHOD(DrawIndexedPrimitive)(D3DPRIMITIVETYPE, INT, UINT, UINT, UINT, UINT) PURE;
