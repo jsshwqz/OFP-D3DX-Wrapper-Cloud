@@ -2,6 +2,8 @@
 #include "d3d8_interfaces.h"
 #include "d3d8_opengl_renderer.cpp"
 
+class CDirect3DDevice8OpenGL;
+
 class CDirect3D8OpenGL : public IDirect3D8 {
 private:
     OpenGLRenderer* renderer;
