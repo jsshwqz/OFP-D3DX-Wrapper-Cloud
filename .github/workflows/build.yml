@@ -1,9 +1,9 @@
 name: Build OFP D3DX Wrapper
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+   push:
+     branches: [main, test]
+   workflow_dispatch:
 
 jobs:
   build:
