@@ -12,6 +12,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        clean: true
+        fetch-depth: 1
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
@@ -19,8 +22,6 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}
       run: |
-        $env:INCLUDE = "$env:INCLUDE;C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared;C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um"
-        $env:LIB = "$env:LIB;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0\um\x86"
         msbuild OFPD3DXWrapper.vcxproj /p:Configuration=Release /p:Platform=Win32 /v:detailed 2>&1 | Out-File build.log
         if ($LASTEXITCODE -ne 0) { Get-Content build.log | Select-String -Pattern "error|warning" -CaseSensitive:$false | Select-Object -First 50 }
 
