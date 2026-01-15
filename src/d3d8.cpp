@@ -197,7 +197,7 @@ public:
 };
 
 extern "C" __declspec(dllexport) IDirect3D8* WINAPI Direct3DCreate8(UINT SDKVersion) {
-    OutputDebugStringA("[OFP-D3DX OpenGL] Direct3DCreate8 called\n");
+    OutputDebugStringA("[OFP-D3DX OpenGL] Direct3DCreate8 called (build 93)\n");
 
     OpenGLRenderer* renderer = new OpenGLRenderer();
     CDirect3D8OpenGL* bridge = new CDirect3D8OpenGL(renderer);
