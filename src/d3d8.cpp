@@ -390,7 +390,9 @@ public:
     virtual HRESULT STDMETHODCALLTYPE CreateQuery(D3DQUERYTYPE, IDirect3DQuery9**) { return E_NOTIMPL; }
 
     virtual HRESULT STDMETHODCALLTYPE EndScene(void) {
-        // This is where FPS counter would be updated and drawn
+        if (renderer) {
+            renderer->RenderFrame();
+        }
         return S_OK;
     }
 
