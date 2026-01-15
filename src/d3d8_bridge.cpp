@@ -1,4 +1,5 @@
 #include "d3d8_interfaces.h"
+#include <gl/gl.h>
 #include "d3d8_opengl_renderer.cpp"
 
 class CDirect3D8OpenGL : public IDirect3D8 {
