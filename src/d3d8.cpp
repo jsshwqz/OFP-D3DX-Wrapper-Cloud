@@ -1,5 +1,7 @@
-// Minimal D3D8 interface definitions
-DEFINE_GUID(IID_IDirect3D8, 0x1DD9E8DA, 0x6C27, 0x41C8, 0xA7, 0xE7, 0x76, 0x15, 0xEE, 0xF7, 0x5C, 0x55);
+#include <windows.h>
+#include "d3d8_interfaces.h"
+
+// D3D8 OpenGL Bridge Implementation
 
 interface IDirect3D8 : public IUnknown
 {
