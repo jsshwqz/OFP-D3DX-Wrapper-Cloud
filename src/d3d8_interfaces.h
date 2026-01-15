@@ -3,27 +3,7 @@
 #include <windows.h>
 #include <math.h>
 
-// Basic COM types
-typedef interface IUnknown IUnknown;
-typedef GUID IID;
-typedef REFIID REFIID;
-typedef DWORD DWORD;
-typedef UINT UINT;
-typedef BOOL BOOL;
-typedef float FLOAT;
-typedef double DOUBLE;
-typedef LONG LONG;
-typedef ULONG ULONG;
-typedef HWND HWND;
-typedef HMONITOR HMONITOR;
-typedef HANDLE HANDLE;
-typedef struct _RECT RECT;
-typedef struct tagPOINT POINT;
-typedef void* LPVOID;
-typedef BYTE BYTE;
-typedef WORD WORD;
-
-// D3D8 types (manually defined to avoid SDK dependency)
+// D3D8 specific types (not defined in windows.h)
 typedef enum {
     D3DDEVTYPE_HAL = 1,
     D3DDEVTYPE_REF = 2,
@@ -57,8 +37,6 @@ typedef enum {
     D3DFMT_D24S8 = 75,
     D3DFMT_D24X8 = 77,
     D3DFMT_D32 = 81,
-    D3DFMT_D15S1 = 73,
-    D3DFMT_D16 = 80,
     D3DFMT_VERTEXDATA = 100,
     D3DFMT_INDEX16 = 101,
     D3DFMT_INDEX32 = 102
@@ -73,16 +51,6 @@ typedef enum {
     D3DRESOURCETYPE_VERTEXBUFFER = 6,
     D3DRESOURCETYPE_INDEXBUFFER = 7
 } D3DRESOURCETYPE;
-
-typedef enum {
-    D3DPMISCCAPS_MASKZ = 0x00000001L,
-    D3DPMISCCAPS_LINEPATTERNOFF = 0x00000002L,
-    D3DPMISCCAPS_CULLNONE = 0x00000004L,
-    D3DPMISCCAPS_CULLCW = 0x00000008L,
-    D3DPMISCCAPS_CULLCCW = 0x00000010L,
-    D3DPMISCCAPS_COLORWRITEENABLE = 0x00000020L,
-    D3DPMISCCAPS_CLIPPLANES = 0x00000040L
-} D3DPMISCCAPS;
 
 typedef enum {
     D3DPRIMITIVETYPE_POINTLIST = 1,
@@ -107,7 +75,6 @@ typedef enum {
     D3DRENDERSTATETYPE_ZENABLE = 1,
     D3DRENDERSTATETYPE_FILLMODE = 3,
     D3DRENDERSTATETYPE_SHADEMODE = 5,
-    D3DRENDERSTATETYPE_LINEPATTERN = 10,
     D3DRENDERSTATETYPE_CULLMODE = 22,
     D3DRENDERSTATETYPE_FOGENABLE = 24,
     D3DRENDERSTATETYPE_FOGCOLOR = 26,
@@ -128,7 +95,6 @@ typedef enum {
     D3DRENDERSTATETYPE_BLENDENABLE = 27,
     D3DRENDERSTATETYPE_SRCBLEND = 19,
     D3DRENDERSTATETYPE_DESTBLEND = 20,
-    D3DRENDERSTATETYPE_BLENDOP = 27,
     D3DRENDERSTATETYPE_ALPHABLENDENABLE = 65,
     D3DRENDERSTATETYPE_ALPHATESTENABLE = 67,
     D3DRENDERSTATETYPE_ALPHAREF = 69,
@@ -195,15 +161,8 @@ typedef enum {
 } D3DPOOL;
 
 typedef enum {
-    D3DBACKBUFFER_TYPE_MONO = 0,
-    D3DBACKBUFFER_TYPE_EMULATED = 1
+    D3DBACKBUFFER_TYPE_MONO = 0
 } D3DBACKBUFFER_TYPE;
-
-typedef enum {
-    D3DSTATEBLOCKTYPE_ALL = 0,
-    D3DSTATEBLOCKTYPE_VERTEXSHADER = 1,
-    D3DSTATEBLOCKTYPE_PIXELSHADER = 2
-} D3DSTATEBLOCKTYPE;
 
 typedef enum {
     D3DQUERYTYPE_VCACHE = 4,
@@ -222,14 +181,7 @@ typedef struct _D3DVIEWPORT8 {
     DWORD MaxZ;
 } D3DVIEWPORT8;
 
-typedef struct _D3DVIEWPORT9 {
-    DWORD X;
-    DWORD Y;
-    DWORD Width;
-    DWORD Height;
-    float MinZ;
-    float MaxZ;
-} D3DVIEWPORT9;
+typedef D3DVIEWPORT8 D3DVIEWPORT9;
 
 typedef struct _D3DDISPLAYMODE {
     UINT Width;
@@ -237,13 +189,6 @@ typedef struct _D3DDISPLAYMODE {
     UINT RefreshRate;
     D3DFORMAT Format;
 } D3DDISPLAYMODE;
-
-typedef struct _D3DRECT {
-    LONG x1;
-    LONG y1;
-    LONG x2;
-    LONG y2;
-} D3DRECT;
 
 typedef struct _D3DGAMMARAMP {
     WORD red[256];
@@ -281,11 +226,6 @@ typedef struct _D3DMATERIAL8 {
     FLOAT Power;
 } D3DMATERIAL8;
 
-typedef struct _D3DCLIPSTATUS8 {
-    DWORD ClipUnion;
-    DWORD ClipIntersection;
-} D3DCLIPSTATUS8;
-
 typedef struct _D3DDEVICE_CREATION_PARAMETERS {
     UINT AdapterOrdinal;
     D3DDEVTYPE DeviceType;
@@ -311,28 +251,6 @@ typedef enum {
     D3DDEGREE_QUINTIC = 5
 } D3DDEGREE;
 
-typedef struct _D3DRECTPATCH_INFO {
-    UINT Version;
-    UINT NumSegsX;
-    UINT NumSegsY;
-    FLOAT PatchWidth;
-    FLOAT PatchHeight;
-    D3DBASISTYPE BasisType;
-    D3DDEGREE Degree;
-    BOOL Loop;
-} D3DRECTPATCH_INFO;
-
-typedef struct _D3DTRIPATCH_INFO {
-    UINT Version;
-    UINT NumSegsX;
-    UINT NumSegsY;
-    D3DBASISTYPE BasisType;
-    D3DDEGREE Degree;
-    BOOL Loop;
-} D3DTRIPATCH_INFO;
-
-// D3DVERTEXELEMENT9 (minimal)
-
 typedef struct _D3DVERTEXELEMENT9 {
     WORD Stream;
     WORD Offset;
@@ -342,7 +260,6 @@ typedef struct _D3DVERTEXELEMENT9 {
     BYTE UsageIndex;
 } D3DVERTEXELEMENT9;
 
-// PALETTEENTRY
 typedef struct _PALETTEENTRY {
     BYTE peRed;
     BYTE peGreen;
@@ -350,10 +267,8 @@ typedef struct _PALETTEENTRY {
     BYTE peFlags;
 } PALETTEENTRY, *PPALETTEENTRY;
 
-// D3DCOLOR (ABGR packed)
-typedef DWORD D3DCOLOR;
+typedef D3DCAPS8 D3DCAPS9;
 
-// D3DADAPTER_IDENTIFIER8 (minimal)
 typedef struct _D3DADAPTER_IDENTIFIER8 {
     char Driver[512];
     char Description[512];
@@ -367,7 +282,6 @@ typedef struct _D3DADAPTER_IDENTIFIER8 {
     DWORD WHQLLevel;
 } D3DADAPTER_IDENTIFIER8;
 
-// D3DCAPS8 (minimal)
 typedef struct _D3DCAPS8 {
     DWORD DeviceType;
     UINT AdapterOrdinal;
@@ -411,45 +325,19 @@ typedef struct _D3DCAPS8 {
     DWORD MaxSimultaneousTextures;
     DWORD MaxUserClipPlanes;
     DWORD MaxActiveLightCount;
-    DWORD MaxTextureBlendStages;
-    DWORD MaxTextureAddressStages;
     DWORD MaxNpatchTessellationLevel;
-    DWORD Reserved5;
     DWORD OcclusionQuerySupportMask;
-    DWORD Reserved6;
-    char Reserved7[4];
-    float MaxPointSpriteSize;
-    DWORD Reserved8;
-    DWORD Reserved9;
-    DWORD NumSimultaneousRTs;
-    DWORD StretchRectFilterCaps;
-    DWORD VS20Caps;
-    DWORD PS20Caps;
     DWORD VertexTextureFilterCaps;
-    DWORD Reserved10[2];
     DWORD MaxVShaderInstructionsExecuted;
     DWORD MaxPShaderInstructionsExecuted;
     DWORD MaxVertexShader30InstructionSlots;
     DWORD MaxPixelShader30InstructionSlots;
+    DWORD NumSimultaneousRTs;
+    DWORD StretchRectFilterCaps;
+    DWORD VS20Caps;
+    DWORD PS20Caps;
 } D3DCAPS8;
 
-// D3DCAPS9 (for compatibility)
-typedef D3DCAPS8 D3DCAPS9;
-
-// D3DMATRIX
-typedef struct _D3DMATRIX {
-    union {
-        struct {
-            float _11, _12, _13, _14;
-            float _21, _22, _23, _24;
-            float _31, _32, _33, _34;
-            float _41, _42, _43, _44;
-        };
-        float m[4][4];
-    };
-} D3DMATRIX;
-
-// D3DPRESENT_PARAMETERS8
 typedef struct _D3DPRESENT_PARAMETERS8 {
     UINT BackBufferWidth;
     UINT BackBufferHeight;
@@ -466,13 +354,15 @@ typedef struct _D3DPRESENT_PARAMETERS8 {
     UINT FullScreen_PresentationInterval;
 } D3DPRESENT_PARAMETERS8;
 
-// D3DPRESENT_PARAMETERS (for compatibility)
 typedef D3DPRESENT_PARAMETERS8 D3DPRESENT_PARAMETERS;
+
+typedef D3DMATRIX D3DMATRIX;
 
 // Forward declarations
 interface IDirect3D8;
 interface IDirect3DDevice8;
 interface IDirect3DSurface8;
+interface IDirect3DBaseTexture8;
 interface IDirect3DTexture8;
 interface IDirect3DVolumeTexture8;
 interface IDirect3DCubeTexture8;
@@ -483,6 +373,7 @@ interface IDirect3DStateBlock8;
 interface IDirect3DVertexShader8;
 interface IDirect3DPixelShader8;
 interface IDirect3DQuery8;
+interface IDirect3DVertexDeclaration9;
 
 // IDirect3D8 interface
 interface IDirect3D8 : public IUnknown {
@@ -529,7 +420,7 @@ interface IDirect3DDevice8 : public IUnknown {
     STDMETHOD(CreateIndexBuffer)(UINT Length, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DIndexBuffer8** ppIndexBuffer) PURE;
     STDMETHOD(CreateRenderTarget)(UINT Width, UINT Height, D3DFORMAT Format, D3DMULTISAMPLE_TYPE MultiSample, BOOL Lockable, IDirect3DSurface8** ppSurface) PURE;
     STDMETHOD(CreateDepthStencilSurface)(UINT Width, UINT Height, D3DFORMAT Format, D3DMULTISAMPLE_TYPE MultiSample, IDirect3DSurface8** ppSurface) PURE;
-    STDMETHOD(CreateImageSurface)(UINT Width, UINT Height, D3DFORMAT Format, IDirect3DSurface8** ppSurface) PURE;
+    STDMETHOD(CreateOffscreenPlainSurface)(UINT Width, UINT Height, D3DFORMAT Format, D3DPOOL Pool, IDirect3DSurface8** ppSurface) PURE;
     STDMETHOD(CopyRects)(IDirect3DSurface8* pSourceSurface, CONST RECT* pSourceRectsArray, UINT cRects, IDirect3DSurface8* pDestinationSurface, CONST POINT* pDestPointsArray) PURE;
     STDMETHOD(UpdateTexture)(IDirect3DBaseTexture8* pSourceTexture, IDirect3DBaseTexture8* pDestinationTexture) PURE;
     STDMETHOD(GetFrontBuffer)(IDirect3DSurface8* pDestSurface) PURE;
@@ -581,7 +472,7 @@ interface IDirect3DDevice8 : public IUnknown {
     STDMETHOD(SetNPatchMode)(float nSegments) PURE;
     STDMETHOD_(float, GetNPatchMode)() PURE;
     STDMETHOD(DrawPrimitive)(D3DPRIMITIVETYPE PrimitiveType, UINT StartVertex, UINT PrimitiveCount) PURE;
-    STDMETHOD(DrawIndexedPrimitive)(D3DPRIMITIVETYPE PrimitiveType, UINT MinVertexIndex, UINT NumVertices, UINT StartIndex, UINT PrimitiveCount) PURE;
+    STDMETHOD(DrawIndexedPrimitive)(D3DPRIMITIVETYPE PrimitiveType, INT MinVertexIndex, UINT NumVertices, UINT StartIndex, UINT PrimitiveCount) PURE;
     STDMETHOD(DrawPrimitiveUP)(D3DPRIMITIVETYPE PrimitiveType, UINT PrimitiveCount, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) PURE;
     STDMETHOD(DrawIndexedPrimitiveUP)(D3DPRIMITIVETYPE PrimitiveType, UINT MinVertexIndex, UINT NumVertices, UINT PrimitiveCount, CONST void* pIndexData, D3DFORMAT IndexDataFormat, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) PURE;
     STDMETHOD(ProcessVertices)(UINT SrcStartIndex, UINT DestIndex, UINT VertexCount, IDirect3DVertexBuffer8* pDestBuffer, DWORD Flags) PURE;
@@ -604,14 +495,13 @@ interface IDirect3DDevice8 : public IUnknown {
     STDMETHOD(SetPixelShaderConstant)(UINT Register, CONST void* pConstantData, UINT ConstantCount) PURE;
     STDMETHOD(GetPixelShaderConstant)(UINT Register, void* pConstantData, UINT ConstantCount) PURE;
     STDMETHOD(GetPixelShaderFunction)(DWORD Handle, void* pData, UINT* pSizeOfData) PURE;
-    STDMETHOD(DrawRectPatch)(UINT Handle, CONST float* pNumSegs, CONST D3DRECTPATCH_INFO* pRectPatchInfo) PURE;
-    STDMETHOD(DrawTriPatch)(UINT Handle, CONST float* pNumSegs, CONST D3DTRIPATCH_INFO* pTriPatchInfo) PURE;
+    STDMETHOD(DrawRectPatch)(UINT Handle, CONST float* pNumSegs, CONST void* pRectPatchInfo) PURE;
+    STDMETHOD(DrawTriPatch)(UINT Handle, CONST float* pNumSegs, CONST void* pTriPatchInfo) PURE;
     STDMETHOD(DeletePatch)(UINT Handle) PURE;
     STDMETHOD(SetFVF)(DWORD FVF) PURE;
     STDMETHOD(GetFVF)(DWORD* pFVF) PURE;
 };
 
-// Stub interfaces (minimal implementations for compilation)
 interface IDirect3DSurface8 : public IUnknown {};
 interface IDirect3DBaseTexture8 : public IUnknown {};
 interface IDirect3DTexture8 : public IDirect3DBaseTexture8 {};
@@ -624,12 +514,10 @@ interface IDirect3DStateBlock8 : public IUnknown {};
 interface IDirect3DVertexShader8 : public IUnknown {};
 interface IDirect3DPixelShader8 : public IUnknown {};
 interface IDirect3DQuery8 : public IUnknown {};
+interface IDirect3DVertexDeclaration9 : public IUnknown {};
 
-// IID definitions
 #ifdef INITGUID
 DEFINE_GUID(IID_IDirect3D8, 0x1DD9E8DA, 0x6C27, 0x41C8, 0xA7, 0xE7, 0x76, 0x15, 0xEE, 0xF7, 0x5C, 0x55);
-DEFINE_GUID(IID_IDirect3DDevice8, 0x1B9CCB17, 0xE46D, 0x4375, 0xA1, 0xA9, 0x7C, 0xDF, 0xA4, 0xE8, 0x50, 0x38);
 #else
 extern const IID IID_IDirect3D8;
-extern const IID IID_IDirect3DDevice8;
 #endif
