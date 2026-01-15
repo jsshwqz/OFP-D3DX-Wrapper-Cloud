@@ -13,6 +13,8 @@ typedef enum { D3DSAMPLERSTATETYPE_MINFILTER = 0, D3DSAMPLERSTATETYPE_MAGFILTER 
 typedef enum { D3DMULTISAMPLE_NONE = 0, D3DMULTISAMPLE_2_SAMPLES = 1, D3DMULTISAMPLE_4_SAMPLES = 3, D3DMULTISAMPLE_8_SAMPLES = 7 } D3DMULTISAMPLE_TYPE;
 typedef enum { D3DPOOL_DEFAULT = 0, D3DPOOL_MANAGED = 1, D3DPOOL_SYSTEMMEM = 2 } D3DPOOL;
 typedef enum { D3DQUERYTYPE_EVENT = 8, D3DQUERYTYPE_OCCLUSION = 9 } D3DQUERYTYPE;
+typedef enum { D3DBACKBUFFER_TYPE_MONO = 0 } D3DBACKBUFFER_TYPE;
+typedef enum { D3DERR_OK = 0, D3DERR_INVALIDCALL = 2153, D3DERR_NOTAVAILABLE = 2154, D3DERR_OUTOFVIDEOMEMORY = 2155 } D3DERR;
 
 typedef struct { UINT X, Y, Width, Height, MinZ, MaxZ; } D3DVIEWPORT8;
 typedef struct { UINT Width, Height, RefreshRate; D3DFORMAT Format; } D3DDISPLAYMODE;
@@ -24,6 +26,7 @@ typedef struct { D3DCOLOR Diffuse, Ambient, Specular, Emissive; FLOAT Power; } D
 typedef struct { UINT AdapterOrdinal; D3DDEVTYPE DeviceType; HWND hFocusWindow; DWORD BehaviorFlags; } D3DDEVICE_CREATION_PARAMETERS;
 typedef struct { BOOL InVBlank; UINT ScanLine; } D3DRASTER_STATUS;
 typedef struct { BYTE Stream, Offset; BYTE Type, Method, Usage, UsageIndex; } D3DVERTEXELEMENT9;
+typedef struct { DWORD ClipUnion; DWORD ClipIntersection; } D3DCLIPSTATUS8;
 
 typedef struct _D3DADAPTER_IDENTIFIER8 { char Driver[512], Description[512]; DWORD DriverVersionLowPart, DriverVersionHighPart, VendorId, DeviceId, SubSysId, Revision; GUID DeviceIdentifier; DWORD WHQLLevel; } D3DADAPTER_IDENTIFIER8;
 
@@ -35,6 +38,8 @@ typedef struct _D3DCAPS8 {
 } D3DCAPS8;
 
 typedef struct { UINT BackBufferWidth, BackBufferHeight, BackBufferCount; D3DFORMAT BackBufferFormat; D3DMULTISAMPLE_TYPE MultiSampleType; DWORD SwapEffect; HWND hDeviceWindow; BOOL Windowed, EnableAutoDepthStencil; D3DFORMAT AutoDepthStencilFormat; DWORD Flags; UINT FullScreen_RefreshRateInHz, FullScreen_PresentationInterval; } D3DPRESENT_PARAMETERS8;
+
+typedef D3DMATRIX D3DMATRIX;
 
 interface IDirect3D8;
 interface IDirect3DDevice8;
@@ -51,6 +56,8 @@ interface IDirect3DVertexShader8;
 interface IDirect3DPixelShader8;
 interface IDirect3DQuery8;
 interface IDirect3DVertexDeclaration9;
+interface IDirect3DVertexShader9;
+interface IDirect3DPixelShader9;
 
 interface IDirect3D8 : public IUnknown {
     STDMETHOD_(UINT, GetAdapterCount)() PURE;
@@ -140,6 +147,8 @@ interface IDirect3DVertexShader8 : public IUnknown {};
 interface IDirect3DPixelShader8 : public IUnknown {};
 interface IDirect3DQuery8 : public IUnknown {};
 interface IDirect3DVertexDeclaration9 : public IUnknown {};
+interface IDirect3DVertexShader9 : public IUnknown {};
+interface IDirect3DPixelShader9 : public IUnknown {};
 
 #ifdef INITGUID
 DEFINE_GUID(IID_IDirect3D8, 0x1DD9E8DA, 0x6C27, 0x41C8, 0xA7, 0xE7, 0x76, 0x15, 0xEE, 0xF7, 0x5C, 0x55);
