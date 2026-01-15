@@ -50,6 +50,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ImportLibrary>$(OutDir)OFPD3DXWrapper.lib</ImportLibrary>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,12 +69,16 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImportLibrary>$(OutDir)OFPD3DXWrapper.lib</ImportLibrary>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\d3d8.cpp" />
+    <ClCompile Include="src\d3d8_bridge.cpp" />
+    <ClCompile Include="src\d3d8_opengl_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\d3d8_interfaces.h" />
     <ClInclude Include="d3dx.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
