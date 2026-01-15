@@ -15,9 +15,16 @@ jobs:
       with:
         clean: true
         fetch-depth: 1
+        persist-credentials: false
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
+
+    - name: Clean before build
+      run: |
+        Remove-Item -Recurse -Force "$env:GITHUB_WORKSPACE/*" -Exclude ".git"
+        git clean -fdx
+        git reset --hard HEAD
 
     - name: Build
       working-directory: ${{github.workspace}}
