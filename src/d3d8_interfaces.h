@@ -39,7 +39,9 @@ typedef struct _D3DCAPS8 {
 
 typedef struct { UINT BackBufferWidth, BackBufferHeight, BackBufferCount; D3DFORMAT BackBufferFormat; D3DMULTISAMPLE_TYPE MultiSampleType; DWORD SwapEffect; HWND hDeviceWindow; BOOL Windowed, EnableAutoDepthStencil; D3DFORMAT AutoDepthStencilFormat; DWORD Flags; UINT FullScreen_RefreshRateInHz, FullScreen_PresentationInterval; } D3DPRESENT_PARAMETERS8;
 
-typedef D3DMATRIX D3DMATRIX;
+typedef struct _D3DMATRIX {
+    FLOAT m[4][4];
+} D3DMATRIX;
 
 interface IDirect3D8;
 interface IDirect3DDevice8;
@@ -55,7 +57,7 @@ interface IDirect3DStateBlock8;
 interface IDirect3DVertexShader8;
 interface IDirect3DPixelShader8;
 interface IDirect3DQuery8;
-interface IDirect3DVertexDeclaration9;
+interface IDirect3DQuery9;
 interface IDirect3DVertexShader9;
 interface IDirect3DPixelShader9;
 
