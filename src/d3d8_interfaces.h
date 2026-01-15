@@ -1,44 +1,20 @@
 #pragma once
 
 #include <windows.h>
-#include <math.h>
 
-typedef enum {
-    D3DDEVTYPE_HAL = 1,
-    D3DDEVTYPE_REF = 2,
-    D3DDEVTYPE_SW = 3,
-    D3DDEVTYPE_NULLREF = 4
-} D3DDEVTYPE;
-
-typedef enum {
-    D3DFMT_UNKNOWN = 0,
-    D3DFMT_R8G8B8 = 20,
-    D3DFMT_A8R8G8B8 = 21,
-    D3DFMT_X8R8G8B8 = 22,
-    D3DFMT_R5G6B5 = 23,
-    D3DFMT_X1R5G5B5 = 24,
-    D3DFMT_A1R5G5B5 = 25,
-    D3DFMT_A4R4G4B4 = 26,
-    D3DFMT_R3G3B2 = 27,
-    D3DFMT_A8 = 28,
-    D3DFMT_D16 = 80,
-    D3DFMT_D24S8 = 75,
-    D3DFMT_D32 = 81,
-    D3DFMT_INDEX16 = 101,
-    D3DFMT_INDEX32 = 102
-} D3DFORMAT;
-
+typedef enum { D3DDEVTYPE_HAL = 1, D3DDEVTYPE_REF = 2, D3DDEVTYPE_SW = 3, D3DDEVTYPE_NULLREF = 4 } D3DDEVTYPE;
+typedef enum { D3DFMT_UNKNOWN = 0, D3DFMT_R8G8B8 = 20, D3DFMT_A8R8G8B8 = 21, D3DFMT_X8R8G8B8 = 22, D3DFMT_R5G6B5 = 23, D3DFMT_X1R5G5B5 = 24, D3DFMT_A1R5G5B5 = 25, D3DFMT_A4R4G4B4 = 26, D3DFMT_A8 = 28, D3DFMT_D16 = 80, D3DFMT_D24S8 = 75, D3DFMT_D32 = 81, D3DFMT_INDEX16 = 101, D3DFMT_INDEX32 = 102 } D3DFORMAT;
 typedef enum { D3DRESOURCETYPE_SURFACE = 1, D3DRESOURCETYPE_VOLUME = 2, D3DRESOURCETYPE_TEXTURE = 3, D3DRESOURCETYPE_VOLUMETEXTURE = 4, D3DRESOURCETYPE_CUBETEXTURE = 5, D3DRESOURCETYPE_VERTEXBUFFER = 6, D3DRESOURCETYPE_INDEXBUFFER = 7 } D3DRESOURCETYPE;
 typedef enum { D3DPRIMITIVETYPE_POINTLIST = 1, D3DPRIMITIVETYPE_LINELIST = 2, D3DPRIMITIVETYPE_LINESTRIP = 3, D3DPRIMITIVETYPE_TRIANGLELIST = 4, D3DPRIMITIVETYPE_TRIANGLESTRIP = 5, D3DPRIMITIVETYPE_TRIANGLEFAN = 6 } D3DPRIMITIVETYPE;
-typedef enum { D3DTRANSFORMSTATETYPE_WORLD = 0, D3DTRANSFORMSTATETYPE_VIEW = 1, D3DTRANSFORMSTATETYPE_PROJECTION = 2, D3DTRANSFORMSTATETYPE_TEXTURE0 = 16, D3DTRANSFORMSTATETYPE_TEXTURE1 = 17 } D3DTRANSFORMSTATETYPE;
-typedef enum { D3DRENDERSTATETYPE_ZENABLE = 1, D3DRENDERSTATETYPE_FILLMODE = 3, D3DRENDERSTATETYPE_SHADEMODE = 5, D3DRENDERSTATETYPE_CULLMODE = 22, D3DRENDERSTATETYPE_FOGENABLE = 24 } D3DRENDERSTATETYPE;
-typedef enum { D3DTEXTURESTAGESTATETYPE_COLOROP = 1, D3DTEXTURESTAGESTATETYPE_COLORARG1 = 2, D3DTEXTURESTAGESTATETYPE_ALPHAOP = 4, D3DTEXTURESTAGESTATETYPE_TEXCOORDINDEX = 11 } D3DTEXTURESTAGESTATETYPE;
+typedef enum { D3DTRANSFORMSTATETYPE_WORLD = 0, D3DTRANSFORMSTATETYPE_VIEW = 1, D3DTRANSFORMSTATETYPE_PROJECTION = 2 } D3DTRANSFORMSTATETYPE;
+typedef enum { D3DRENDERSTATETYPE_ZENABLE = 1, D3DRENDERSTATETYPE_FILLMODE = 3, D3DRENDERSTATETYPE_CULLMODE = 22 } D3DRENDERSTATETYPE;
+typedef enum { D3DTEXTURESTAGESTATETYPE_COLOROP = 1, D3DTEXTURESTAGESTATETYPE_COLORARG1 = 2, D3DTEXTURESTAGESTATETYPE_ALPHAOP = 4 } D3DTEXTURESTAGESTATETYPE;
 typedef enum { D3DSAMPLERSTATETYPE_MINFILTER = 0, D3DSAMPLERSTATETYPE_MAGFILTER = 1, D3DSAMPLERSTATETYPE_MIPFILTER = 2, D3DSAMPLERSTATETYPE_ADDRESSU = 3, D3DSAMPLERSTATETYPE_ADDRESSV = 4, D3DSAMPLERSTATETYPE_MAXANISOTROPY = 9 } D3DSAMPLERSTATETYPE;
 typedef enum { D3DMULTISAMPLE_NONE = 0, D3DMULTISAMPLE_2_SAMPLES = 1, D3DMULTISAMPLE_4_SAMPLES = 3, D3DMULTISAMPLE_8_SAMPLES = 7 } D3DMULTISAMPLE_TYPE;
 typedef enum { D3DPOOL_DEFAULT = 0, D3DPOOL_MANAGED = 1, D3DPOOL_SYSTEMMEM = 2 } D3DPOOL;
 typedef enum { D3DQUERYTYPE_EVENT = 8, D3DQUERYTYPE_OCCLUSION = 9 } D3DQUERYTYPE;
 
-typedef struct { DWORD X, Y, Width, Height, MinZ, MaxZ; } D3DVIEWPORT8;
+typedef struct { UINT X, Y, Width, Height, MinZ, MaxZ; } D3DVIEWPORT8;
 typedef struct { UINT Width, Height, RefreshRate; D3DFORMAT Format; } D3DDISPLAYMODE;
 typedef struct { WORD red[256], green[256], blue[256]; } D3DGAMMARAMP;
 typedef DWORD D3DCOLOR;
@@ -47,21 +23,16 @@ typedef struct { D3DLIGHTTYPE Type; D3DCOLOR Color; FLOAT PositionX, PositionY, 
 typedef struct { D3DCOLOR Diffuse, Ambient, Specular, Emissive; FLOAT Power; } D3DMATERIAL8;
 typedef struct { UINT AdapterOrdinal; D3DDEVTYPE DeviceType; HWND hFocusWindow; DWORD BehaviorFlags; } D3DDEVICE_CREATION_PARAMETERS;
 typedef struct { BOOL InVBlank; UINT ScanLine; } D3DRASTER_STATUS;
-typedef enum { D3DBASIS_BEZIER = 0, D3DBASIS_BSPLINE = 1, D3DBASIS_CATMULLROM = 2 } D3DBASISTYPE;
-typedef enum { D3DDEGREE_LINEAR = 1, D3DDEGREE_QUADRATIC = 2, D3DDEGREE_CUBIC = 3, D3DDEGREE_QUINTIC = 5 } D3DDEGREE;
-typedef struct { WORD Stream, Offset; BYTE Type, Method, Usage, UsageIndex; } D3DVERTEXELEMENT9;
-typedef struct { BYTE peRed, peGreen, peBlue, peFlags; } PALETTEENTRY;
-typedef PALETTEENTRY* PPALETTEENTRY;
+typedef struct { BYTE Stream, Offset; BYTE Type, Method, Usage, UsageIndex; } D3DVERTEXELEMENT9;
 
 typedef struct _D3DADAPTER_IDENTIFIER8 { char Driver[512], Description[512]; DWORD DriverVersionLowPart, DriverVersionHighPart, VendorId, DeviceId, SubSysId, Revision; GUID DeviceIdentifier; DWORD WHQLLevel; } D3DADAPTER_IDENTIFIER8;
 
 typedef struct _D3DCAPS8 {
-    DWORD DeviceType, Caps, Caps2, Caps3, Caps4, PresentationIntervals, CursorCaps, DevCaps, MiscCaps, RasterCaps, ZCmpCaps, SrcBlendCaps, DestBlendCaps, AlphaCmpCaps, ShadeCaps, TextureCaps, TextureFilterCaps, CubeTextureFilterCaps, VolumeTextureFilterCaps, TextureAddressCaps, VolumeTextureAddressCaps, LineCaps;
+    DWORD DeviceType, Caps, Caps2, Caps3, Caps4, PresentationIntervals, CursorCaps, DevCaps, MiscCaps, RasterCaps, ZCmpCaps, SrcBlendCaps, DestBlendCaps, AlphaCmpCaps, ShadeCaps, TextureCaps, TextureFilterCaps, CubeTextureFilterCaps, VolumeTextureFilterCaps, TextureAddressCaps, VolumeTextureAddressCaps, LineCaps, StencilCaps, FVFCaps, TextureOpCaps, MaxTextureBlendStages, MaxSimultaneousTextures, MaxUserClipPlanes, MaxActiveLightCount, OcclusionQuerySupportMask, VertexTextureFilterCaps, MaxVShaderInstructionsExecuted, MaxPShaderInstructionsExecuted, MaxVertexShader30InstructionSlots, MaxPixelShader30InstructionSlots, NumSimultaneousRTs, VS20Caps, PS20Caps;
     UINT AdapterOrdinal, MaxTextureWidth, MaxTextureHeight, MaxVolumeExtent, MaxTextureRepeat, MaxTextureAspectRatio;
-    DWORD MaxAnisotropy, StencilCaps, FVFCaps, TextureOpCaps, MaxTextureBlendStages, MaxSimultaneousTextures, MaxUserClipPlanes, MaxActiveLightCount, MaxNpatchTessellationLevel, OcclusionQuerySupportMask, VertexTextureFilterCaps, MaxVShaderInstructionsExecuted, MaxPShaderInstructionsExecuted, MaxVertexShader30InstructionSlots, MaxPixelShader30InstructionSlots, NumSimultaneousRTs, StretchRectFilterCaps, VS20Caps, PS20Caps;
+    DWORD MaxAnisotropy;
     float MaxVertexW, GuardBandLeft, GuardBandRight, GuardBandTop, GuardBandBottom, ExtentsAdjust;
 } D3DCAPS8;
-typedef D3DCAPS8 D3DCAPS9;
 
 typedef struct { UINT BackBufferWidth, BackBufferHeight, BackBufferCount; D3DFORMAT BackBufferFormat; D3DMULTISAMPLE_TYPE MultiSampleType; DWORD SwapEffect; HWND hDeviceWindow; BOOL Windowed, EnableAutoDepthStencil; D3DFORMAT AutoDepthStencilFormat; DWORD Flags; UINT FullScreen_RefreshRateInHz, FullScreen_PresentationInterval; } D3DPRESENT_PARAMETERS8;
 
@@ -107,7 +78,7 @@ interface IDirect3DDevice8 : public IUnknown {
     STDMETHOD_(BOOL, ShowCursor)(BOOL) PURE;
     STDMETHOD(Reset)(D3DPRESENT_PARAMETERS8*) PURE;
     STDMETHOD(Present)(CONST RECT*, CONST RECT*, HWND, CONST RGNDATA*) PURE;
-    STDMETHOD(GetBackBuffer)(UINT, D3DBACKBUFFER_TYPE, IDirect3DSurface8**) PURE;
+    STDMETHOD(GetBackBuffer)(UINT, UINT, IDirect3DSurface8**) PURE;
     STDMETHOD(GetRasterStatus)(D3DRASTER_STATUS*) PURE;
     STDMETHOD_(void, SetGammaRamp)(DWORD, CONST D3DGAMMARAMP*) PURE;
     STDMETHOD_(void, GetGammaRamp)(D3DGAMMARAMP*) PURE;
