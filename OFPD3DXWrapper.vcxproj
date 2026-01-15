@@ -74,7 +74,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\d3d8.cpp" />
-    <ClCompile Include="src\d3d8_bridge.cpp" />
     <ClCompile Include="src\d3d8_opengl_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
