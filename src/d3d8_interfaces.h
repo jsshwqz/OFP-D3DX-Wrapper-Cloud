@@ -3,7 +3,6 @@
 #include <windows.h>
 #include <math.h>
 
-// D3D8 specific types (not defined in windows.h)
 typedef enum {
     D3DDEVTYPE_HAL = 1,
     D3DDEVTYPE_REF = 2,
@@ -22,343 +21,50 @@ typedef enum {
     D3DFMT_A4R4G4B4 = 26,
     D3DFMT_R3G3B2 = 27,
     D3DFMT_A8 = 28,
-    D3DFMT_A8R3G3B2 = 29,
-    D3DFMT_X4R4G4B4 = 30,
-    D3DFMT_A2B10G10R10 = 31,
-    D3DFMT_A8B8G8R8 = 32,
-    D3DFMT_X8B8G8R8 = 33,
-    D3DFMT_A2R10G10B10 = 35,
-    D3DFMT_A16B16G16R16 = 36,
-    D3DFMT_L8 = 50,
-    D3DFMT_A8L8 = 51,
-    D3DFMT_A4L4 = 52,
-    D3DFMT_S8_LOCKABLE = 70,
-    D3DFMT_D16_LOCKABLE = 71,
+    D3DFMT_D16 = 80,
     D3DFMT_D24S8 = 75,
-    D3DFMT_D24X8 = 77,
     D3DFMT_D32 = 81,
-    D3DFMT_VERTEXDATA = 100,
     D3DFMT_INDEX16 = 101,
     D3DFMT_INDEX32 = 102
 } D3DFORMAT;
 
-typedef enum {
-    D3DRESOURCETYPE_SURFACE = 1,
-    D3DRESOURCETYPE_VOLUME = 2,
-    D3DRESOURCETYPE_TEXTURE = 3,
-    D3DRESOURCETYPE_VOLUMETEXTURE = 4,
-    D3DRESOURCETYPE_CUBETEXTURE = 5,
-    D3DRESOURCETYPE_VERTEXBUFFER = 6,
-    D3DRESOURCETYPE_INDEXBUFFER = 7
-} D3DRESOURCETYPE;
+typedef enum { D3DRESOURCETYPE_SURFACE = 1, D3DRESOURCETYPE_VOLUME = 2, D3DRESOURCETYPE_TEXTURE = 3, D3DRESOURCETYPE_VOLUMETEXTURE = 4, D3DRESOURCETYPE_CUBETEXTURE = 5, D3DRESOURCETYPE_VERTEXBUFFER = 6, D3DRESOURCETYPE_INDEXBUFFER = 7 } D3DRESOURCETYPE;
+typedef enum { D3DPRIMITIVETYPE_POINTLIST = 1, D3DPRIMITIVETYPE_LINELIST = 2, D3DPRIMITIVETYPE_LINESTRIP = 3, D3DPRIMITIVETYPE_TRIANGLELIST = 4, D3DPRIMITIVETYPE_TRIANGLESTRIP = 5, D3DPRIMITIVETYPE_TRIANGLEFAN = 6 } D3DPRIMITIVETYPE;
+typedef enum { D3DTRANSFORMSTATETYPE_WORLD = 0, D3DTRANSFORMSTATETYPE_VIEW = 1, D3DTRANSFORMSTATETYPE_PROJECTION = 2, D3DTRANSFORMSTATETYPE_TEXTURE0 = 16, D3DTRANSFORMSTATETYPE_TEXTURE1 = 17 } D3DTRANSFORMSTATETYPE;
+typedef enum { D3DRENDERSTATETYPE_ZENABLE = 1, D3DRENDERSTATETYPE_FILLMODE = 3, D3DRENDERSTATETYPE_SHADEMODE = 5, D3DRENDERSTATETYPE_CULLMODE = 22, D3DRENDERSTATETYPE_FOGENABLE = 24 } D3DRENDERSTATETYPE;
+typedef enum { D3DTEXTURESTAGESTATETYPE_COLOROP = 1, D3DTEXTURESTAGESTATETYPE_COLORARG1 = 2, D3DTEXTURESTAGESTATETYPE_ALPHAOP = 4, D3DTEXTURESTAGESTATETYPE_TEXCOORDINDEX = 11 } D3DTEXTURESTAGESTATETYPE;
+typedef enum { D3DSAMPLERSTATETYPE_MINFILTER = 0, D3DSAMPLERSTATETYPE_MAGFILTER = 1, D3DSAMPLERSTATETYPE_MIPFILTER = 2, D3DSAMPLERSTATETYPE_ADDRESSU = 3, D3DSAMPLERSTATETYPE_ADDRESSV = 4, D3DSAMPLERSTATETYPE_MAXANISOTROPY = 9 } D3DSAMPLERSTATETYPE;
+typedef enum { D3DMULTISAMPLE_NONE = 0, D3DMULTISAMPLE_2_SAMPLES = 1, D3DMULTISAMPLE_4_SAMPLES = 3, D3DMULTISAMPLE_8_SAMPLES = 7 } D3DMULTISAMPLE_TYPE;
+typedef enum { D3DPOOL_DEFAULT = 0, D3DPOOL_MANAGED = 1, D3DPOOL_SYSTEMMEM = 2 } D3DPOOL;
+typedef enum { D3DQUERYTYPE_EVENT = 8, D3DQUERYTYPE_OCCLUSION = 9 } D3DQUERYTYPE;
 
-typedef enum {
-    D3DPRIMITIVETYPE_POINTLIST = 1,
-    D3DPRIMITIVETYPE_LINELIST = 2,
-    D3DPRIMITIVETYPE_LINESTRIP = 3,
-    D3DPRIMITIVETYPE_TRIANGLELIST = 4,
-    D3DPRIMITIVETYPE_TRIANGLESTRIP = 5,
-    D3DPRIMITIVETYPE_TRIANGLEFAN = 6
-} D3DPRIMITIVETYPE;
-
-typedef enum {
-    D3DTRANSFORMSTATETYPE_WORLD = 0,
-    D3DTRANSFORMSTATETYPE_VIEW = 1,
-    D3DTRANSFORMSTATETYPE_PROJECTION = 2,
-    D3DTRANSFORMSTATETYPE_TEXTURE0 = 16,
-    D3DTRANSFORMSTATETYPE_TEXTURE1 = 17,
-    D3DTRANSFORMSTATETYPE_TEXTURE2 = 18,
-    D3DTRANSFORMSTATETYPE_TEXTURE3 = 19
-} D3DTRANSFORMSTATETYPE;
-
-typedef enum {
-    D3DRENDERSTATETYPE_ZENABLE = 1,
-    D3DRENDERSTATETYPE_FILLMODE = 3,
-    D3DRENDERSTATETYPE_SHADEMODE = 5,
-    D3DRENDERSTATETYPE_CULLMODE = 22,
-    D3DRENDERSTATETYPE_FOGENABLE = 24,
-    D3DRENDERSTATETYPE_FOGCOLOR = 26,
-    D3DRENDERSTATETYPE_FOGSTART = 27,
-    D3DRENDERSTATETYPE_FOGEND = 28,
-    D3DRENDERSTATETYPE_FOGDENSITY = 29,
-    D3DRENDERSTATETYPE_RANGEFOGENABLE = 48,
-    D3DRENDERSTATETYPE_STENCILENABLE = 52,
-    D3DRENDERSTATETYPE_STENCILFAIL = 53,
-    D3DRENDERSTATETYPE_STENCILZFAIL = 54,
-    D3DRENDERSTATETYPE_STENCILZPASS = 55,
-    D3DRENDERSTATETYPE_STENCILREF = 56,
-    D3DRENDERSTATETYPE_STENCILMASK = 57,
-    D3DRENDERSTATETYPE_STENCILWRITEMASK = 58,
-    D3DRENDERSTATETYPE_TEXTUREFACTOR = 60,
-    D3DRENDERSTATETYPE_AMBIENT = 68,
-    D3DRENDERSTATETYPE_COLORWRITEENABLE = 63,
-    D3DRENDERSTATETYPE_BLENDENABLE = 27,
-    D3DRENDERSTATETYPE_SRCBLEND = 19,
-    D3DRENDERSTATETYPE_DESTBLEND = 20,
-    D3DRENDERSTATETYPE_ALPHABLENDENABLE = 65,
-    D3DRENDERSTATETYPE_ALPHATESTENABLE = 67,
-    D3DRENDERSTATETYPE_ALPHAREF = 69,
-    D3DRENDERSTATETYPE_ALPHAFUNC = 70,
-    D3DRENDERSTATETYPE_SEPARATEALPHABLENDENABLE = 206,
-} D3DRENDERSTATETYPE;
-
-typedef enum {
-    D3DTEXTURESTAGESTATETYPE_COLOROP = 1,
-    D3DTEXTURESTAGESTATETYPE_COLORARG1 = 2,
-    D3DTEXTURESTAGESTATETYPE_COLORARG2 = 3,
-    D3DTEXTURESTAGESTATETYPE_ALPHAOP = 4,
-    D3DTEXTURESTAGESTATETYPE_ALPHAARG1 = 5,
-    D3DTEXTURESTAGESTATETYPE_ALPHAARG2 = 6,
-    D3DTEXTURESTAGESTATETYPE_BUMPENVMAT00 = 7,
-    D3DTEXTURESTAGESTATETYPE_BUMPENVMAT01 = 8,
-    D3DTEXTURESTAGESTATETYPE_BUMPENVMAT10 = 9,
-    D3DTEXTURESTAGESTATETYPE_BUMPENVMAT11 = 10,
-    D3DTEXTURESTAGESTATETYPE_TEXCOORDINDEX = 11,
-    D3DTEXTURESTAGESTATETYPE_BUMPENVLSCALE = 22,
-    D3DTEXTURESTAGESTATETYPE_BUMPENVLOFFSET = 23,
-    D3DTEXTURESTAGESTATETYPE_TEXTURETRANSFORMFLAGS = 24,
-    D3DTEXTURESTAGESTATETYPE_COLORARG0 = 26,
-    D3DTEXTURESTAGESTATETYPE_ALPHAARG0 = 27,
-    D3DTEXTURESTAGESTATETYPE_RESULTARG = 28
-} D3DTEXTURESTAGESTATETYPE;
-
-typedef enum {
-    D3DSAMPLERSTATETYPE_MINFILTER = 0,
-    D3DSAMPLERSTATETYPE_MAGFILTER = 1,
-    D3DSAMPLERSTATETYPE_MIPFILTER = 2,
-    D3DSAMPLERSTATETYPE_ADDRESSU = 3,
-    D3DSAMPLERSTATETYPE_ADDRESSV = 4,
-    D3DSAMPLERSTATETYPE_ADDRESSW = 5,
-    D3DSAMPLERSTATETYPE_BORDERCOLOR = 6,
-    D3DSAMPLERSTATETYPE_MAXMIPLEVEL = 8,
-    D3DSAMPLERSTATETYPE_MAXANISOTROPY = 9
-} D3DSAMPLERSTATETYPE;
-
-typedef enum {
-    D3DMULTISAMPLE_NONE = 0,
-    D3DMULTISAMPLE_2_SAMPLES = 1,
-    D3DMULTISAMPLE_3_SAMPLES = 2,
-    D3DMULTISAMPLE_4_SAMPLES = 3,
-    D3DMULTISAMPLE_5_SAMPLES = 4,
-    D3DMULTISAMPLE_6_SAMPLES = 5,
-    D3DMULTISAMPLE_7_SAMPLES = 6,
-    D3DMULTISAMPLE_8_SAMPLES = 7,
-    D3DMULTISAMPLE_9_SAMPLES = 8,
-    D3DMULTISAMPLE_10_SAMPLES = 9,
-    D3DMULTISAMPLE_11_SAMPLES = 10,
-    D3DMULTISAMPLE_12_SAMPLES = 11,
-    D3DMULTISAMPLE_13_SAMPLES = 12,
-    D3DMULTISAMPLE_14_SAMPLES = 13,
-    D3DMULTISAMPLE_15_SAMPLES = 14,
-    D3DMULTISAMPLE_16_SAMPLES = 15
-} D3DMULTISAMPLE_TYPE;
-
-typedef enum {
-    D3DPOOL_DEFAULT = 0,
-    D3DPOOL_MANAGED = 1,
-    D3DPOOL_SYSTEMMEM = 2,
-    D3DPOOL_SCRATCH = 3
-} D3DPOOL;
-
-typedef enum {
-    D3DBACKBUFFER_TYPE_MONO = 0
-} D3DBACKBUFFER_TYPE;
-
-typedef enum {
-    D3DQUERYTYPE_VCACHE = 4,
-    D3DQUERYTYPE_RESOURCEMANAGER = 5,
-    D3DQUERYTYPE_VERTEXSTATS = 6,
-    D3DQUERYTYPE_EVENT = 8,
-    D3DQUERYTYPE_OCCLUSION = 9
-} D3DQUERYTYPE;
-
-typedef struct _D3DVIEWPORT8 {
-    DWORD X;
-    DWORD Y;
-    DWORD Width;
-    DWORD Height;
-    DWORD MinZ;
-    DWORD MaxZ;
-} D3DVIEWPORT8;
-
-typedef D3DVIEWPORT8 D3DVIEWPORT9;
-
-typedef struct _D3DDISPLAYMODE {
-    UINT Width;
-    UINT Height;
-    UINT RefreshRate;
-    D3DFORMAT Format;
-} D3DDISPLAYMODE;
-
-typedef struct _D3DGAMMARAMP {
-    WORD red[256];
-    WORD green[256];
-    WORD blue[256];
-} D3DGAMMARAMP;
-
+typedef struct { DWORD X, Y, Width, Height, MinZ, MaxZ; } D3DVIEWPORT8;
+typedef struct { UINT Width, Height, RefreshRate; D3DFORMAT Format; } D3DDISPLAYMODE;
+typedef struct { WORD red[256], green[256], blue[256]; } D3DGAMMARAMP;
 typedef DWORD D3DCOLOR;
+typedef enum { D3DLIGHTTYPE_POINT = 1, D3DLIGHTTYPE_SPOT = 2, D3DLIGHTTYPE_DIRECTIONAL = 3 } D3DLIGHTTYPE;
+typedef struct { D3DLIGHTTYPE Type; D3DCOLOR Color; FLOAT PositionX, PositionY, PositionZ, DirectionX, DirectionY, DirectionZ, Range, Falloff, Attenuation0, Attenuation1, Attenuation2, Theta, Phi; } D3DLIGHT8;
+typedef struct { D3DCOLOR Diffuse, Ambient, Specular, Emissive; FLOAT Power; } D3DMATERIAL8;
+typedef struct { UINT AdapterOrdinal; D3DDEVTYPE DeviceType; HWND hFocusWindow; DWORD BehaviorFlags; } D3DDEVICE_CREATION_PARAMETERS;
+typedef struct { BOOL InVBlank; UINT ScanLine; } D3DRASTER_STATUS;
+typedef enum { D3DBASIS_BEZIER = 0, D3DBASIS_BSPLINE = 1, D3DBASIS_CATMULLROM = 2 } D3DBASISTYPE;
+typedef enum { D3DDEGREE_LINEAR = 1, D3DDEGREE_QUADRATIC = 2, D3DDEGREE_CUBIC = 3, D3DDEGREE_QUINTIC = 5 } D3DDEGREE;
+typedef struct { WORD Stream, Offset; BYTE Type, Method, Usage, UsageIndex; } D3DVERTEXELEMENT9;
+typedef struct { BYTE peRed, peGreen, peBlue, peFlags; } PALETTEENTRY;
+typedef PALETTEENTRY* PPALETTEENTRY;
 
-typedef enum {
-    D3DLIGHTTYPE_POINT = 1,
-    D3DLIGHTTYPE_SPOT = 2,
-    D3DLIGHTTYPE_DIRECTIONAL = 3
-} D3DLIGHTTYPE;
-
-typedef struct _D3DLIGHT8 {
-    D3DLIGHTTYPE Type;
-    D3DCOLOR Color;
-    FLOAT PositionX, PositionY, PositionZ;
-    FLOAT DirectionX, DirectionY, DirectionZ;
-    FLOAT Range;
-    FLOAT Falloff;
-    FLOAT Attenuation0;
-    FLOAT Attenuation1;
-    FLOAT Attenuation2;
-    FLOAT Theta;
-    FLOAT Phi;
-} D3DLIGHT8;
-
-typedef struct _D3DMATERIAL8 {
-    D3DCOLOR Diffuse;
-    D3DCOLOR Ambient;
-    D3DCOLOR Specular;
-    D3DCOLOR Emissive;
-    FLOAT Power;
-} D3DMATERIAL8;
-
-typedef struct _D3DDEVICE_CREATION_PARAMETERS {
-    UINT AdapterOrdinal;
-    D3DDEVTYPE DeviceType;
-    HWND hFocusWindow;
-    DWORD BehaviorFlags;
-} D3DDEVICE_CREATION_PARAMETERS;
-
-typedef struct _D3DRASTER_STATUS {
-    BOOL InVBlank;
-    UINT ScanLine;
-} D3DRASTER_STATUS;
-
-typedef enum {
-    D3DBASIS_BEZIER = 0,
-    D3DBASIS_BSPLINE = 1,
-    D3DBASIS_CATMULLROM = 2
-} D3DBASISTYPE;
-
-typedef enum {
-    D3DDEGREE_LINEAR = 1,
-    D3DDEGREE_QUADRATIC = 2,
-    D3DDEGREE_CUBIC = 3,
-    D3DDEGREE_QUINTIC = 5
-} D3DDEGREE;
-
-typedef struct _D3DVERTEXELEMENT9 {
-    WORD Stream;
-    WORD Offset;
-    BYTE Type;
-    BYTE Method;
-    BYTE Usage;
-    BYTE UsageIndex;
-} D3DVERTEXELEMENT9;
-
-typedef struct _PALETTEENTRY {
-    BYTE peRed;
-    BYTE peGreen;
-    BYTE peBlue;
-    BYTE peFlags;
-} PALETTEENTRY, *PPALETTEENTRY;
-
-typedef D3DCAPS8 D3DCAPS9;
-
-typedef struct _D3DADAPTER_IDENTIFIER8 {
-    char Driver[512];
-    char Description[512];
-    DWORD DriverVersionLowPart;
-    DWORD DriverVersionHighPart;
-    DWORD VendorId;
-    DWORD DeviceId;
-    DWORD SubSysId;
-    DWORD Revision;
-    GUID DeviceIdentifier;
-    DWORD WHQLLevel;
-} D3DADAPTER_IDENTIFIER8;
+typedef struct _D3DADAPTER_IDENTIFIER8 { char Driver[512], Description[512]; DWORD DriverVersionLowPart, DriverVersionHighPart, VendorId, DeviceId, SubSysId, Revision; GUID DeviceIdentifier; DWORD WHQLLevel; } D3DADAPTER_IDENTIFIER8;
 
 typedef struct _D3DCAPS8 {
-    DWORD DeviceType;
-    UINT AdapterOrdinal;
-    DWORD Caps;
-    DWORD Caps2;
-    DWORD Caps3;
-    DWORD Caps4;
-    DWORD PresentationIntervals;
-    DWORD CursorCaps;
-    DWORD DevCaps;
-    DWORD MiscCaps;
-    DWORD RasterCaps;
-    DWORD ZCmpCaps;
-    DWORD SrcBlendCaps;
-    DWORD DestBlendCaps;
-    DWORD AlphaCmpCaps;
-    DWORD ShadeCaps;
-    DWORD TextureCaps;
-    DWORD TextureFilterCaps;
-    DWORD CubeTextureFilterCaps;
-    DWORD VolumeTextureFilterCaps;
-    DWORD TextureAddressCaps;
-    DWORD VolumeTextureAddressCaps;
-    DWORD LineCaps;
-    DWORD MaxTextureWidth;
-    DWORD MaxTextureHeight;
-    DWORD MaxVolumeExtent;
-    DWORD MaxTextureRepeat;
-    DWORD MaxTextureAspectRatio;
-    DWORD MaxAnisotropy;
-    float MaxVertexW;
-    float GuardBandLeft;
-    float GuardBandRight;
-    float GuardBandTop;
-    float GuardBandBottom;
-    float ExtentsAdjust;
-    DWORD StencilCaps;
-    DWORD FVFCaps;
-    DWORD TextureOpCaps;
-    DWORD MaxTextureBlendStages;
-    DWORD MaxSimultaneousTextures;
-    DWORD MaxUserClipPlanes;
-    DWORD MaxActiveLightCount;
-    DWORD MaxNpatchTessellationLevel;
-    DWORD OcclusionQuerySupportMask;
-    DWORD VertexTextureFilterCaps;
-    DWORD MaxVShaderInstructionsExecuted;
-    DWORD MaxPShaderInstructionsExecuted;
-    DWORD MaxVertexShader30InstructionSlots;
-    DWORD MaxPixelShader30InstructionSlots;
-    DWORD NumSimultaneousRTs;
-    DWORD StretchRectFilterCaps;
-    DWORD VS20Caps;
-    DWORD PS20Caps;
+    DWORD DeviceType, Caps, Caps2, Caps3, Caps4, PresentationIntervals, CursorCaps, DevCaps, MiscCaps, RasterCaps, ZCmpCaps, SrcBlendCaps, DestBlendCaps, AlphaCmpCaps, ShadeCaps, TextureCaps, TextureFilterCaps, CubeTextureFilterCaps, VolumeTextureFilterCaps, TextureAddressCaps, VolumeTextureAddressCaps, LineCaps;
+    UINT AdapterOrdinal, MaxTextureWidth, MaxTextureHeight, MaxVolumeExtent, MaxTextureRepeat, MaxTextureAspectRatio;
+    DWORD MaxAnisotropy, StencilCaps, FVFCaps, TextureOpCaps, MaxTextureBlendStages, MaxSimultaneousTextures, MaxUserClipPlanes, MaxActiveLightCount, MaxNpatchTessellationLevel, OcclusionQuerySupportMask, VertexTextureFilterCaps, MaxVShaderInstructionsExecuted, MaxPShaderInstructionsExecuted, MaxVertexShader30InstructionSlots, MaxPixelShader30InstructionSlots, NumSimultaneousRTs, StretchRectFilterCaps, VS20Caps, PS20Caps;
+    float MaxVertexW, GuardBandLeft, GuardBandRight, GuardBandTop, GuardBandBottom, ExtentsAdjust;
 } D3DCAPS8;
+typedef D3DCAPS8 D3DCAPS9;
 
-typedef struct _D3DPRESENT_PARAMETERS8 {
-    UINT BackBufferWidth;
-    UINT BackBufferHeight;
-    D3DFORMAT BackBufferFormat;
-    UINT BackBufferCount;
-    D3DMULTISAMPLE_TYPE MultiSampleType;
-    DWORD SwapEffect;
-    HWND hDeviceWindow;
-    BOOL Windowed;
-    BOOL EnableAutoDepthStencil;
-    D3DFORMAT AutoDepthStencilFormat;
-    DWORD Flags;
-    UINT FullScreen_RefreshRateInHz;
-    UINT FullScreen_PresentationInterval;
-} D3DPRESENT_PARAMETERS8;
+typedef struct { UINT BackBufferWidth, BackBufferHeight, BackBufferCount; D3DFORMAT BackBufferFormat; D3DMULTISAMPLE_TYPE MultiSampleType; DWORD SwapEffect; HWND hDeviceWindow; BOOL Windowed, EnableAutoDepthStencil; D3DFORMAT AutoDepthStencilFormat; DWORD Flags; UINT FullScreen_RefreshRateInHz, FullScreen_PresentationInterval; } D3DPRESENT_PARAMETERS8;
 
-typedef D3DPRESENT_PARAMETERS8 D3DPRESENT_PARAMETERS;
-
-typedef D3DMATRIX D3DMATRIX;
-
-// Forward declarations
 interface IDirect3D8;
 interface IDirect3DDevice8;
 interface IDirect3DSurface8;
@@ -375,131 +81,79 @@ interface IDirect3DPixelShader8;
 interface IDirect3DQuery8;
 interface IDirect3DVertexDeclaration9;
 
-// IDirect3D8 interface
 interface IDirect3D8 : public IUnknown {
-    STDMETHOD(RegisterSoftwareDevice)(void* pInitializeFunction) PURE;
     STDMETHOD_(UINT, GetAdapterCount)() PURE;
-    STDMETHOD(GetAdapterIdentifier)(UINT Adapter, DWORD Flags, D3DADAPTER_IDENTIFIER8* pIdentifier) PURE;
-    STDMETHOD_(UINT, GetAdapterModeCount)(UINT Adapter) PURE;
-    STDMETHOD(EnumAdapterModes)(UINT Adapter, UINT Mode, D3DDISPLAYMODE* pMode) PURE;
-    STDMETHOD(GetAdapterDisplayMode)(UINT Adapter, D3DDISPLAYMODE* pMode) PURE;
-    STDMETHOD(CheckDeviceType)(UINT Adapter, D3DDEVTYPE CheckType, D3DFORMAT DisplayFormat, D3DFORMAT BackBufferFormat, BOOL Windowed) PURE;
-    STDMETHOD(CheckDeviceFormat)(UINT Adapter, D3DDEVTYPE DeviceType, D3DFORMAT AdapterFormat, DWORD Usage, D3DRESOURCETYPE RType, D3DFORMAT CheckFormat) PURE;
-    STDMETHOD(CheckDeviceMultiSampleType)(UINT Adapter, D3DDEVTYPE DeviceType, D3DFORMAT SurfaceFormat, BOOL Windowed, D3DMULTISAMPLE_TYPE MultiSampleType) PURE;
-    STDMETHOD(CheckDepthStencilMatch)(UINT Adapter, D3DDEVTYPE DeviceType, D3DFORMAT AdapterFormat, D3DFORMAT RenderTargetFormat, D3DFORMAT DepthStencilFormat) PURE;
-    STDMETHOD(GetDeviceCaps)(UINT Adapter, D3DDEVTYPE DeviceType, D3DCAPS8* pCaps) PURE;
-    STDMETHOD_(HMONITOR, GetAdapterMonitor)(UINT Adapter) PURE;
-    STDMETHOD(CreateDevice)(UINT Adapter, D3DDEVTYPE DeviceType, HWND hFocusWindow, DWORD BehaviorFlags, D3DPRESENT_PARAMETERS8* pPresentationParameters, IDirect3DDevice8** ppReturnedDeviceInterface) PURE;
+    STDMETHOD(GetAdapterIdentifier)(UINT, DWORD, D3DADAPTER_IDENTIFIER8*) PURE;
+    STDMETHOD_(UINT, GetAdapterModeCount)(UINT) PURE;
+    STDMETHOD(EnumAdapterModes)(UINT, UINT, D3DDISPLAYMODE*) PURE;
+    STDMETHOD(GetAdapterDisplayMode)(UINT, D3DDISPLAYMODE*) PURE;
+    STDMETHOD(CheckDeviceType)(UINT, D3DDEVTYPE, D3DFORMAT, D3DFORMAT, BOOL) PURE;
+    STDMETHOD(CheckDeviceFormat)(UINT, D3DDEVTYPE, D3DFORMAT, DWORD, D3DRESOURCETYPE, D3DFORMAT) PURE;
+    STDMETHOD(CheckDeviceMultiSampleType)(UINT, D3DDEVTYPE, D3DFORMAT, BOOL, D3DMULTISAMPLE_TYPE) PURE;
+    STDMETHOD(CheckDepthStencilMatch)(UINT, D3DDEVTYPE, D3DFORMAT, D3DFORMAT, D3DFORMAT) PURE;
+    STDMETHOD(GetDeviceCaps)(UINT, D3DDEVTYPE, D3DCAPS8*) PURE;
+    STDMETHOD_(HMONITOR, GetAdapterMonitor)(UINT) PURE;
+    STDMETHOD(CreateDevice)(UINT, D3DDEVTYPE, HWND, DWORD, D3DPRESENT_PARAMETERS8*, IDirect3DDevice8**) PURE;
 };
 
-// IDirect3DDevice8 interface
 interface IDirect3DDevice8 : public IUnknown {
     STDMETHOD(TestCooperativeLevel)() PURE;
     STDMETHOD_(UINT, GetAvailableTextureMem)() PURE;
-    STDMETHOD(ResourceManagerDiscardBytes)(DWORD Bytes) PURE;
-    STDMETHOD(GetDirect3D)(IDirect3D8** ppD3D8) PURE;
-    STDMETHOD(GetDeviceCaps)(D3DCAPS8* pCaps) PURE;
-    STDMETHOD(GetDisplayMode)(D3DDISPLAYMODE* pMode) PURE;
-    STDMETHOD(GetCreationParameters)(D3DDEVICE_CREATION_PARAMETERS* pParameters) PURE;
-    STDMETHOD(SetCursorProperties)(UINT XHotSpot, UINT YHotSpot, IDirect3DSurface8* pCursorBitmap) PURE;
-    STDMETHOD_(void, SetCursorPosition)(int X, int Y, DWORD Flags) PURE;
-    STDMETHOD_(BOOL, ShowCursor)(BOOL bShow) PURE;
-    STDMETHOD(CreateAdditionalSwapChain)(D3DPRESENT_PARAMETERS8* pPresentationParameters, IDirect3DSwapChain8** pSwapChain) PURE;
-    STDMETHOD(GetSwapChain)(UINT iSwapChain, IDirect3DSwapChain8** pSwapChain) PURE;
-    STDMETHOD_(UINT, GetNumberOfSwapChains)() PURE;
-    STDMETHOD(Reset)(D3DPRESENT_PARAMETERS8* pPresentationParameters) PURE;
-    STDMETHOD(Present)(CONST RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion) PURE;
-    STDMETHOD(GetBackBuffer)(UINT BackBuffer, D3DBACKBUFFER_TYPE Type, IDirect3DSurface8** ppBackBuffer) PURE;
-    STDMETHOD(GetRasterStatus)(D3DRASTER_STATUS* pRasterStatus) PURE;
-    STDMETHOD_(void, SetGammaRamp)(DWORD Flags, CONST D3DGAMMARAMP* pRamp) PURE;
-    STDMETHOD_(void, GetGammaRamp)(D3DGAMMARAMP* pRamp) PURE;
-    STDMETHOD(CreateTexture)(UINT Width, UINT Height, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DTexture8** ppTexture) PURE;
-    STDMETHOD(CreateVolumeTexture)(UINT Width, UINT Height, UINT Depth, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DVolumeTexture8** ppVolumeTexture) PURE;
-    STDMETHOD(CreateCubeTexture)(UINT EdgeLength, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DCubeTexture8** ppCubeTexture) PURE;
-    STDMETHOD(CreateVertexBuffer)(UINT Length, DWORD Usage, DWORD FVF, D3DPOOL Pool, IDirect3DVertexBuffer8** ppVertexBuffer) PURE;
-    STDMETHOD(CreateIndexBuffer)(UINT Length, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DIndexBuffer8** ppIndexBuffer) PURE;
-    STDMETHOD(CreateRenderTarget)(UINT Width, UINT Height, D3DFORMAT Format, D3DMULTISAMPLE_TYPE MultiSample, BOOL Lockable, IDirect3DSurface8** ppSurface) PURE;
-    STDMETHOD(CreateDepthStencilSurface)(UINT Width, UINT Height, D3DFORMAT Format, D3DMULTISAMPLE_TYPE MultiSample, IDirect3DSurface8** ppSurface) PURE;
-    STDMETHOD(CreateOffscreenPlainSurface)(UINT Width, UINT Height, D3DFORMAT Format, D3DPOOL Pool, IDirect3DSurface8** ppSurface) PURE;
-    STDMETHOD(CopyRects)(IDirect3DSurface8* pSourceSurface, CONST RECT* pSourceRectsArray, UINT cRects, IDirect3DSurface8* pDestinationSurface, CONST POINT* pDestPointsArray) PURE;
-    STDMETHOD(UpdateTexture)(IDirect3DBaseTexture8* pSourceTexture, IDirect3DBaseTexture8* pDestinationTexture) PURE;
-    STDMETHOD(GetFrontBuffer)(IDirect3DSurface8* pDestSurface) PURE;
-    STDMETHOD(SetRenderTarget)(IDirect3DSurface8* pRenderTarget, IDirect3DSurface8* pNewZStencil) PURE;
-    STDMETHOD(GetRenderTarget)(IDirect3DSurface8** ppRenderTarget) PURE;
-    STDMETHOD(GetDepthStencilSurface)(IDirect3DSurface8** ppZStencilSurface) PURE;
+    STDMETHOD(GetDeviceCaps)(D3DCAPS8*) PURE;
+    STDMETHOD(GetDisplayMode)(D3DDISPLAYMODE*) PURE;
+    STDMETHOD(GetCreationParameters)(D3DDEVICE_CREATION_PARAMETERS*) PURE;
+    STDMETHOD(SetCursorProperties)(UINT, UINT, IDirect3DSurface8*) PURE;
+    STDMETHOD_(void, SetCursorPosition)(int, int, DWORD) PURE;
+    STDMETHOD_(BOOL, ShowCursor)(BOOL) PURE;
+    STDMETHOD(Reset)(D3DPRESENT_PARAMETERS8*) PURE;
+    STDMETHOD(Present)(CONST RECT*, CONST RECT*, HWND, CONST RGNDATA*) PURE;
+    STDMETHOD(GetBackBuffer)(UINT, D3DBACKBUFFER_TYPE, IDirect3DSurface8**) PURE;
+    STDMETHOD(GetRasterStatus)(D3DRASTER_STATUS*) PURE;
+    STDMETHOD_(void, SetGammaRamp)(DWORD, CONST D3DGAMMARAMP*) PURE;
+    STDMETHOD_(void, GetGammaRamp)(D3DGAMMARAMP*) PURE;
+    STDMETHOD(CreateTexture)(UINT, UINT, UINT, DWORD, D3DFORMAT, D3DPOOL, IDirect3DTexture8**, HANDLE*) PURE;
+    STDMETHOD(CreateVolumeTexture)(UINT, UINT, UINT, UINT, DWORD, D3DFORMAT, D3DPOOL, IDirect3DVolumeTexture8**, HANDLE*) PURE;
+    STDMETHOD(CreateCubeTexture)(UINT, UINT, DWORD, D3DFORMAT, D3DPOOL, IDirect3DCubeTexture8**, HANDLE*) PURE;
+    STDMETHOD(CreateVertexBuffer)(UINT, DWORD, DWORD, D3DPOOL, IDirect3DVertexBuffer8**, HANDLE*) PURE;
+    STDMETHOD(CreateIndexBuffer)(UINT, DWORD, D3DFORMAT, D3DPOOL, IDirect3DIndexBuffer8**, HANDLE*) PURE;
+    STDMETHOD(CreateRenderTarget)(UINT, UINT, D3DFORMAT, D3DMULTISAMPLE_TYPE, BOOL, IDirect3DSurface8**, HANDLE*) PURE;
+    STDMETHOD(CreateDepthStencilSurface)(UINT, UINT, D3DFORMAT, D3DMULTISAMPLE_TYPE, IDirect3DSurface8**, HANDLE*) PURE;
+    STDMETHOD(SetRenderTarget)(IDirect3DSurface8*, IDirect3DSurface8*) PURE;
+    STDMETHOD(GetRenderTarget)(IDirect3DSurface8**) PURE;
+    STDMETHOD(GetDepthStencilSurface)(IDirect3DSurface8**) PURE;
     STDMETHOD(BeginScene)() PURE;
     STDMETHOD(EndScene)() PURE;
-    STDMETHOD(Clear)(DWORD Count, CONST D3DRECT* pRects, DWORD Flags, D3DCOLOR Color, float Z, DWORD Stencil) PURE;
-    STDMETHOD(SetTransform)(D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX* pMatrix) PURE;
-    STDMETHOD(GetTransform)(D3DTRANSFORMSTATETYPE State, D3DMATRIX* pMatrix) PURE;
-    STDMETHOD(MultiplyTransform)(D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX* pMatrix) PURE;
-    STDMETHOD(SetViewport)(CONST D3DVIEWPORT8* pViewport) PURE;
-    STDMETHOD(GetViewport)(D3DVIEWPORT8* pViewport) PURE;
-    STDMETHOD(SetMaterial)(CONST D3DMATERIAL8* pMaterial) PURE;
-    STDMETHOD(GetMaterial)(D3DMATERIAL8* pMaterial) PURE;
-    STDMETHOD(SetLight)(DWORD Index, CONST D3DLIGHT8* pLight) PURE;
-    STDMETHOD(GetLight)(DWORD Index, D3DLIGHT8* pLight) PURE;
-    STDMETHOD(LightEnable)(DWORD Index, BOOL Enable) PURE;
-    STDMETHOD(GetLightEnable)(DWORD Index, BOOL* pEnable) PURE;
-    STDMETHOD(SetClipPlane)(DWORD Index, CONST float* pPlane) PURE;
-    STDMETHOD(GetClipPlane)(DWORD Index, float* pPlane) PURE;
-    STDMETHOD(SetRenderState)(D3DRENDERSTATETYPE State, DWORD Value) PURE;
-    STDMETHOD(GetRenderState)(D3DRENDERSTATETYPE State, DWORD* pValue) PURE;
-    STDMETHOD(BeginStateBlock)() PURE;
-    STDMETHOD(EndStateBlock)(DWORD* pToken) PURE;
-    STDMETHOD(ApplyStateBlock)(DWORD Token) PURE;
-    STDMETHOD(CaptureStateBlock)(DWORD Token) PURE;
-    STDMETHOD(DeleteStateBlock)(DWORD Token) PURE;
-    STDMETHOD(CreateStateBlock)(D3DSTATEBLOCKTYPE Type, DWORD* pToken) PURE;
-    STDMETHOD(SetClipStatus)(CONST D3DCLIPSTATUS8* pClipStatus) PURE;
-    STDMETHOD(GetClipStatus)(D3DCLIPSTATUS8* pClipStatus) PURE;
-    STDMETHOD(GetTexture)(DWORD Stage, IDirect3DBaseTexture8** ppTexture) PURE;
-    STDMETHOD(SetTexture)(DWORD Stage, IDirect3DBaseTexture8* pTexture) PURE;
-    STDMETHOD(GetTextureStageState)(DWORD Stage, D3DTEXTURESTAGESTATETYPE Type, DWORD* pValue) PURE;
-    STDMETHOD(SetTextureStageState)(DWORD Stage, D3DTEXTURESTAGESTATETYPE Type, DWORD Value) PURE;
-    STDMETHOD(GetSamplerState)(DWORD Sampler, D3DSAMPLERSTATETYPE Type, DWORD* pValue) PURE;
-    STDMETHOD(SetSamplerState)(DWORD Sampler, D3DSAMPLERSTATETYPE Type, DWORD Value) PURE;
-    STDMETHOD(ValidateDevice)(DWORD* pNumPasses) PURE;
-    STDMETHOD(GetInfo)(DWORD DevInfoID, void* pDevInfoStruct, DWORD DevInfoStructSize) PURE;
-    STDMETHOD(SetPaletteEntries)(UINT PaletteNumber, CONST PALETTEENTRY* pEntries) PURE;
-    STDMETHOD(GetPaletteEntries)(UINT PaletteNumber, PALETTEENTRY* pEntries) PURE;
-    STDMETHOD(SetCurrentTexturePalette)(UINT PaletteNumber) PURE;
-    STDMETHOD(GetCurrentTexturePalette)(UINT* PaletteNumber) PURE;
-    STDMETHOD(SetScissorRect)(CONST RECT* pRect) PURE;
-    STDMETHOD(GetScissorRect)(RECT* pRect) PURE;
-    STDMETHOD(SetSoftwareVertexProcessing)(BOOL bSoftware) PURE;
+    STDMETHOD(Clear)(DWORD, CONST D3DRECT*, DWORD, D3DCOLOR, float, DWORD) PURE;
+    STDMETHOD(SetTransform)(D3DTRANSFORMSTATETYPE, CONST D3DMATRIX*) PURE;
+    STDMETHOD(GetTransform)(D3DTRANSFORMSTATETYPE, D3DMATRIX*) PURE;
+    STDMETHOD(MultiplyTransform)(D3DTRANSFORMSTATETYPE, CONST D3DMATRIX*) PURE;
+    STDMETHOD(SetViewport)(CONST D3DVIEWPORT8*) PURE;
+    STDMETHOD(GetViewport)(D3DVIEWPORT8*) PURE;
+    STDMETHOD(SetMaterial)(CONST D3DMATERIAL8*) PURE;
+    STDMETHOD(SetLight)(DWORD, CONST D3DLIGHT8*) PURE;
+    STDMETHOD(LightEnable)(DWORD, BOOL) PURE;
+    STDMETHOD(SetClipPlane)(DWORD, CONST float*) PURE;
+    STDMETHOD(SetRenderState)(D3DRENDERSTATETYPE, DWORD) PURE;
+    STDMETHOD(GetRenderState)(D3DRENDERSTATETYPE, DWORD*) PURE;
+    STDMETHOD(GetTexture)(DWORD, IDirect3DBaseTexture8**) PURE;
+    STDMETHOD(SetTexture)(DWORD, IDirect3DBaseTexture8*) PURE;
+    STDMETHOD(SetTextureStageState)(DWORD, D3DTEXTURESTAGESTATETYPE, DWORD) PURE;
+    STDMETHOD(SetSamplerState)(DWORD, D3DSAMPLERSTATETYPE, DWORD) PURE;
+    STDMETHOD(SetScissorRect)(CONST RECT*) PURE;
+    STDMETHOD(SetSoftwareVertexProcessing)(BOOL) PURE;
     STDMETHOD_(BOOL, GetSoftwareVertexProcessing)() PURE;
-    STDMETHOD(SetNPatchMode)(float nSegments) PURE;
+    STDMETHOD(SetNPatchMode)(float) PURE;
     STDMETHOD_(float, GetNPatchMode)() PURE;
-    STDMETHOD(DrawPrimitive)(D3DPRIMITIVETYPE PrimitiveType, UINT StartVertex, UINT PrimitiveCount) PURE;
-    STDMETHOD(DrawIndexedPrimitive)(D3DPRIMITIVETYPE PrimitiveType, INT MinVertexIndex, UINT NumVertices, UINT StartIndex, UINT PrimitiveCount) PURE;
-    STDMETHOD(DrawPrimitiveUP)(D3DPRIMITIVETYPE PrimitiveType, UINT PrimitiveCount, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) PURE;
-    STDMETHOD(DrawIndexedPrimitiveUP)(D3DPRIMITIVETYPE PrimitiveType, UINT MinVertexIndex, UINT NumVertices, UINT PrimitiveCount, CONST void* pIndexData, D3DFORMAT IndexDataFormat, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) PURE;
-    STDMETHOD(ProcessVertices)(UINT SrcStartIndex, UINT DestIndex, UINT VertexCount, IDirect3DVertexBuffer8* pDestBuffer, DWORD Flags) PURE;
-    STDMETHOD(CreateVertexShader)(CONST DWORD* pDeclaration, CONST DWORD* pFunction, DWORD* pHandle, DWORD Usage) PURE;
-    STDMETHOD(SetVertexShader)(DWORD Handle) PURE;
-    STDMETHOD(GetVertexShader)(DWORD* pHandle) PURE;
-    STDMETHOD(DeleteVertexShader)(DWORD Handle) PURE;
-    STDMETHOD(SetVertexShaderConstant)(UINT Register, CONST void* pConstantData, UINT ConstantCount) PURE;
-    STDMETHOD(GetVertexShaderConstant)(UINT Register, void* pConstantData, UINT ConstantCount) PURE;
-    STDMETHOD(GetVertexShaderDeclaration)(DWORD Handle, void* pData, UINT* pSizeOfData) PURE;
-    STDMETHOD(GetVertexShaderFunction)(DWORD Handle, void* pData, UINT* pSizeOfData) PURE;
-    STDMETHOD(SetStreamSource)(UINT StreamNumber, IDirect3DVertexBuffer8* pStreamData, UINT Stride) PURE;
-    STDMETHOD(GetStreamSource)(UINT StreamNumber, IDirect3DVertexBuffer8** ppStreamData, UINT* pStride) PURE;
-    STDMETHOD(SetIndices)(IDirect3DIndexBuffer8* pIndexData, UINT BaseVertexIndex) PURE;
-    STDMETHOD(GetIndices)(IDirect3DIndexBuffer8** ppIndexData, UINT* pBaseVertexIndex) PURE;
-    STDMETHOD(CreatePixelShader)(CONST DWORD* pFunction, DWORD* pHandle) PURE;
-    STDMETHOD(SetPixelShader)(DWORD Handle) PURE;
-    STDMETHOD(GetPixelShader)(DWORD* pHandle) PURE;
-    STDMETHOD(DeletePixelShader)(DWORD Handle) PURE;
-    STDMETHOD(SetPixelShaderConstant)(UINT Register, CONST void* pConstantData, UINT ConstantCount) PURE;
-    STDMETHOD(GetPixelShaderConstant)(UINT Register, void* pConstantData, UINT ConstantCount) PURE;
-    STDMETHOD(GetPixelShaderFunction)(DWORD Handle, void* pData, UINT* pSizeOfData) PURE;
-    STDMETHOD(DrawRectPatch)(UINT Handle, CONST float* pNumSegs, CONST void* pRectPatchInfo) PURE;
-    STDMETHOD(DrawTriPatch)(UINT Handle, CONST float* pNumSegs, CONST void* pTriPatchInfo) PURE;
-    STDMETHOD(DeletePatch)(UINT Handle) PURE;
-    STDMETHOD(SetFVF)(DWORD FVF) PURE;
-    STDMETHOD(GetFVF)(DWORD* pFVF) PURE;
+    STDMETHOD(DrawPrimitive)(D3DPRIMITIVETYPE, UINT, UINT) PURE;
+    STDMETHOD(DrawIndexedPrimitive)(D3DPRIMITIVETYPE, INT, UINT, UINT, UINT, UINT) PURE;
+    STDMETHOD(DrawPrimitiveUP)(D3DPRIMITIVETYPE, UINT, CONST void*, UINT) PURE;
+    STDMETHOD(DrawIndexedPrimitiveUP)(D3DPRIMITIVETYPE, UINT, UINT, UINT, CONST void*, D3DFORMAT, CONST void*, UINT) PURE;
+    STDMETHOD(SetStreamSource)(UINT, IDirect3DVertexBuffer8*, UINT) PURE;
+    STDMETHOD(SetIndices)(IDirect3DIndexBuffer8*, UINT) PURE;
+    STDMETHOD(SetFVF)(DWORD) PURE;
+    STDMETHOD(SetVertexShader)(DWORD) PURE;
+    STDMETHOD(SetPixelShader)(DWORD) PURE;
+    STDMETHOD(DeletePatch)(UINT) PURE;
 };
 
 interface IDirect3DSurface8 : public IUnknown {};
