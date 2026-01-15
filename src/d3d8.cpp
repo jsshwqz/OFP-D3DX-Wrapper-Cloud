@@ -2,7 +2,52 @@
 #include "d3d8_interfaces.h"
 #include "d3d8_opengl_renderer.cpp"
 
-class CDirect3DDevice8OpenGL;
+class CDirect3DDevice8OpenGL : public IDirect3DDevice8 {
+private:
+    OpenGLRenderer* renderer;
+    LONG refCount;
+
+public:
+    CDirect3DDevice8OpenGL(OpenGLRenderer* ogl) : renderer(ogl), refCount(1) {}
+
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) {
+        if (ppvObj == NULL) return E_INVALIDARG;
+        if (riid == IID_IUnknown) {
+            *ppvObj = this;
+            AddRef();
+            return S_OK;
+        }
+        return E_NOINTERFACE;
+    }
+
+    virtual ULONG STDMETHODCALLTYPE AddRef() {
+        return InterlockedIncrement(&refCount);
+    }
+
+    virtual ULONG STDMETHODCALLTYPE Release() {
+        ULONG ref = InterlockedDecrement(&refCount);
+        if (ref == 0) delete this;
+        return ref;
+    }
+
+    virtual HRESULT STDMETHODCALLTYPE TestCooperativeLevel() { return S_OK; }
+    virtual UINT STDMETHODCALLTYPE GetAvailableTextureMem() { return 1024 * 1024 * 64; }
+    virtual HRESULT STDMETHODCALLTYPE GetDeviceCaps(D3DCAPS8* pCaps) { return E_NOTIMPL; }
+    virtual HRESULT STDMETHODCALLTYPE GetDisplayMode(D3DDISPLAYMODE* pMode) { return E_NOTIMPL; }
+    virtual HRESULT STDMETHODCALLTYPE GetCreationParameters(D3DDEVICE_CREATION_PARAMETERS* pParameters) { return E_NOTIMPL; }
+    virtual HRESULT STDMETHODCALLTYPE SetCursorProperties(UINT, UINT, IDirect3DSurface8*) { return E_NOTIMPL; }
+    virtual void STDMETHODCALLTYPE SetCursorPosition(int, int, DWORD) {}
+    virtual BOOL STDMETHODCALLTYPE ShowCursor(BOOL) { return FALSE; }
+    virtual HRESULT STDMETHODCALLTYPE Reset(D3DPRESENT_PARAMETERS8*) { return S_OK; }
+    virtual HRESULT STDMETHODCALLTYPE Present(CONST RECT*, CONST RECT*, HWND, CONST RGNDATA*) { 
+        renderer->SwapBuffers();
+        return S_OK; 
+    }
+    virtual HRESULT STDMETHODCALLTYPE GetBackBuffer(UINT, UINT, IDirect3DSurface8**) { return E_NOTIMPL; }
+    virtual HRESULT STDMETHODCALLTYPE GetRasterStatus(D3DRASTER_STATUS*) { return E_NOTIMPL; }
+    virtual void STDMETHODCALLTYPE SetGammaRamp(DWORD, CONST D3DGAMMARAMP*) {}
+    virtual void STDMETHODCALLTYPE GetGammaRamp(D3DGAMMARAMP*) {}
+};
 
 class CDirect3D8OpenGL : public IDirect3D8 {
 private:
@@ -90,59 +135,6 @@ public:
         return S_OK;
     }
 };
-
-class CDirect3DDevice8OpenGL : public IDirect3DDevice8 {
-private:
-    OpenGLRenderer* renderer;
-    LONG refCount;
-
-public:
-    CDirect3DDevice8OpenGL(OpenGLRenderer* ogl) : renderer(ogl), refCount(1) {}
-
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void** ppvObj) {
-        if (ppvObj == NULL) return E_INVALIDARG;
-        if (riid == IID_IUnknown) {
-            *ppvObj = this;
-            AddRef();
-            return S_OK;
-        }
-        return E_NOINTERFACE;
-    }
-
-    virtual ULONG STDMETHODCALLTYPE AddRef() {
-        return InterlockedIncrement(&refCount);
-    }
-
-    virtual ULONG STDMETHODCALLTYPE Release() {
-        ULONG ref = InterlockedDecrement(&refCount);
-        if (ref == 0) delete this;
-        return ref;
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE TestCooperativeLevel() { return S_OK; }
-    virtual UINT STDMETHODCALLTYPE GetAvailableTextureMem() { return 128 * 1024 * 1024; }
-    virtual HRESULT STDMETHODCALLTYPE EvictManagedResources() { return S_OK; }
-
-    virtual HRESULT STDMETHODCALLTYPE GetDeviceCaps(D3DCAPS8*) { return S_OK; }
-    virtual HRESULT STDMETHODCALLTYPE GetDisplayMode(D3DDISPLAYMODE*) { return S_OK; }
-    virtual HRESULT STDMETHODCALLTYPE GetCreationParameters(D3DDEVICE_CREATION_PARAMETERS*) { return S_OK; }
-    virtual HRESULT STDMETHODCALLTYPE SetCursorProperties(UINT, UINT, IDirect3DSurface8*) { return S_OK; }
-    virtual void STDMETHODCALLTYPE SetCursorPosition(int, int, DWORD) {}
-    virtual BOOL STDMETHODCALLTYPE ShowCursor(BOOL) { return TRUE; }
-    virtual UINT STDMETHODCALLTYPE GetNumberOfSwapChains() { return 0; }
-    virtual HRESULT STDMETHODCALLTYPE Reset(D3DPRESENT_PARAMETERS8*) { return S_OK; }
-
-    virtual HRESULT STDMETHODCALLTYPE Present(CONST RECT*, CONST RECT*, HWND, CONST RGNDATA*) {
-        if (renderer) renderer->RenderFrame();
-        return S_OK;
-    }
-
-    virtual HRESULT STDMETHODCALLTYPE GetBackBuffer(UINT, D3DBACKBUFFER_TYPE, IDirect3DSurface8**) { return E_NOTIMPL; }
-    virtual HRESULT STDMETHODCALLTYPE GetRasterStatus(D3DRASTER_STATUS*) { return S_OK; }
-    virtual void STDMETHODCALLTYPE SetGammaRamp(DWORD, DWORD, CONST D3DGAMMARAMP*) {}
-    virtual void STDMETHODCALLTYPE GetGammaRamp(D3DGAMMARAMP*) {}
-
-    virtual HRESULT STDMETHODCALLTYPE CreateTexture(UINT, UINT, UINT, DWORD, D3DFORMAT, D3DPOOL, IDirect3DTexture8**, HANDLE*) { return E_NOTIMPL; }
     virtual HRESULT STDMETHODCALLTYPE CreateVolumeTexture(UINT, UINT, UINT, UINT, DWORD, D3DFORMAT, D3DPOOL, IDirect3DVolumeTexture8**, HANDLE*) { return E_NOTIMPL; }
     virtual HRESULT STDMETHODCALLTYPE CreateCubeTexture(UINT, UINT, DWORD, D3DFORMAT, D3DPOOL, IDirect3DCubeTexture8**, HANDLE*) { return E_NOTIMPL; }
     virtual HRESULT STDMETHODCALLTYPE CreateVertexBuffer(UINT, DWORD, DWORD, D3DPOOL, IDirect3DVertexBuffer8**, HANDLE*) { return E_NOTIMPL; }
