@@ -14,15 +14,13 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-file(GLOB SOURCES
-    "src/*.cpp"
-    "src/**/*.cpp"
-)
+file(GLOB SOURCES "src/*.cpp")
 
 add_library(OFPD3DXWrapper SHARED ${SOURCES})
 
 target_link_libraries(OFPD3DXWrapper PRIVATE
     d3d9.lib
+    d3dx9.lib
 )
 
 if(MSVC)

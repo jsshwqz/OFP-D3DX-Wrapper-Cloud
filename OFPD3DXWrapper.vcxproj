@@ -43,7 +43,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OFPD3DXWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OFPD3DXWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -58,7 +58,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;OFPD3DXWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;OFPD3DXWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -71,24 +71,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\d3d8to9\d3d8.cpp" />
-    <ClCompile Include="src\d3d8to9\d3d9.cpp" />
-    <ClCompile Include="src\d3d8to9\d3d8to9.cpp" />
-    <ClCompile Include="src\ofp_compat\ofp_renderer.cpp" />
-    <ClCompile Include="src\ofp_compat\ofp_texture.cpp" />
-    <ClCompile Include="src\ofp_compat\night_filter.cpp" />
-    <ClCompile Include="src\ofp_compat\mod_support.cpp" />
-    <ClCompile Include="src\enhancement\anisotropic.cpp" />
-    <ClCompile Include="src\enhancement\vsync.cpp" />
-    <ClCompile Include="src\detect\gpu_detect.cpp" />
-    <ClCompile Include="src\detect\fallback.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\d3d8.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\config.hpp" />
-    <ClInclude Include="include\ofp_compat.hpp" />
-    <ClInclude Include="include\d3d8to9.hpp" />
-    <ClInclude Include="src\d3d8to9\d3d8to9.hpp" />
+    <ClInclude Include="d3dx.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets"></ImportGroup>

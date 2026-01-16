@@ -1,9 +1,9 @@
 name: Build OFP D3DX Wrapper
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+   push:
+     branches: [main, test]
+   workflow_dispatch:
 
 jobs:
   build:
@@ -16,15 +16,20 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Clean build directory
-      run: Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
-
-    - name: Configure CMake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
-
     - name: Build
-      working-directory: ${{github.workspace}}/build
-      run: cmake --build . --config Release
+      working-directory: ${{github.workspace}}
+      run: |
+        $env:INCLUDE = "$env:INCLUDE;C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared;C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um"
+        $env:LIB = "$env:LIB;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0\um\x86"
+        msbuild OFPD3DXWrapper.vcxproj /p:Configuration=Release /p:Platform=Win32 /v:detailed 2>&1 | Out-File build.log
+        if ($LASTEXITCODE -ne 0) { Get-Content build.log | Select-String -Pattern "error|warning" -CaseSensitive:$false | Select-Object -First 50 }
+
+    - name: Upload build log
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-log
+        path: build.log
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
